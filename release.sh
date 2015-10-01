@@ -21,4 +21,4 @@ else
     echo "Creating git tag failed, most likely due to tag already existing - upload to Gemfury skipped"
 fi
 
-rm -rf appkit-*.tgz
+rm -rf appkit-tide*.tgz
