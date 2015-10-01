@@ -1,4 +1,3 @@
-_ = require "underscore"
 Sinon = require "sinon"
 React = require "react/addons"
 TestUtils = React.addons.TestUtils
