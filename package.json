@@ -5,6 +5,7 @@
   "main": "lib/tide/index.js",
   "author": "",
   "license": "MIT",
+  "repository": "git@github.com:tictail/appkit-tide.git",
   "devDependencies": {
     "chai": "^2.3.0",
     "chai-as-promised": "^5.0.0",
