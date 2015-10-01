@@ -1,6 +1,9 @@
-_ = require "underscore"
 React = require "react/addons"
 ShallowEqual = require "react/lib/shallowEqual"
+assign = require "lodash.assign"
+isArray = require "lodash.isarray"
+mapValues = require "lodash.mapvalues"
+omit = require "lodash.omit"
 
 NOT_KEY_PATH_PROPS = [
   "children"
@@ -52,18 +55,16 @@ class TideComponent extends React.Component
       @getTide().logComponentRender "state", React.findDOMNode(this)
 
   getKeyPaths: (props) ->
-    _(props)
-      .chain()
-      .omit (value, key) -> excludedProps[key]
-      .mapObject (value, key) ->
-        return value if _.isArray value
-        return [key] if value is true
-        value.split "."
-      .value()
+    keyPaths = omit(props, (value, key) -> excludedProps[key])
+    keyPaths = mapValues keyPaths, (value, key) ->
+      return value if isArray value
+      return [key] if value is true
+      value.split "."
+    keyPaths
 
   getPropsFromKeyPaths: (keyPaths) ->
     state = @getTide().getState()
-    _(keyPaths).mapObject (value) ->
+    mapValues keyPaths, (value) ->
       [..., last] = value
       if last is "toJS()"
         obj = state.getIn value.slice 0, -1
@@ -74,9 +75,9 @@ class TideComponent extends React.Component
     not ShallowEqual @_props, @getPropsFromKeyPaths(@_keyPaths)
 
   getChildProps: ->
-    keyPaths = _.extend {}, @_keyPaths
+    keyPaths = assign {}, @_keyPaths
 
-    _.extend {}, @_props,
+    assign {}, @_props,
       tide:
         keyPaths: keyPaths
         actions: @getTide().getActions()

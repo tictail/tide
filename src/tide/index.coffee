@@ -1,7 +1,11 @@
-_ = require "underscore"
 React = require "react"
-{EventEmitter} = require "events"
+assign = require "lodash.assign"
 diff = require 'immutablediff'
+forEach = require "lodash.foreach"
+isArray = require "lodash.isarray"
+keys = require "lodash.keys"
+wrap = require "lodash.wrap"
+{EventEmitter} = require "events"
 
 TideComponent = require "./component"
 Utils = require "../utils"
@@ -27,12 +31,12 @@ class Tide extends EventEmitter
     @setState updater(@state)
 
   mutate: (keyPath, value) ->
-    keyPath = keyPath.split('.') if not _.isArray(keyPath)
+    keyPath = keyPath.split('.') if not isArray(keyPath)
     value = value(@getState().getIn(keyPath)) if typeof value is 'function'
     @setState(@getState().setIn(keyPath, value))
 
   get: (keyPath) ->
-    keyPath = keyPath.split('.') if not _.isArray(keyPath)
+    keyPath = keyPath.split('.') if not isArray(keyPath)
     @getState().getIn(keyPath)
 
   addActions: (name, actionsClass) ->
@@ -42,7 +46,7 @@ class Tide extends EventEmitter
     if name
       @actions[name]
     else
-      _.extend {}, @actions
+      assign {}, @actions
 
   enableLogging: ({actions, state, components}) ->
     if actions
@@ -53,10 +57,10 @@ class Tide extends EventEmitter
     @logging.components = true if components
 
   wrapActionMethods: ->
-    _(@actions).each (actions, actionsName) =>
-      methods = _.keys Utils.getInternalMethods(actions.constructor)
-      _(methods).each (method) =>
-        actions[method] = _.wrap actions[method], (func) =>
+    forEach @actions, (actions, actionsName) =>
+      methods = keys Utils.getInternalMethods(actions.constructor)
+      forEach methods, (method) =>
+        actions[method] = wrap actions[method], (func) =>
           callArgs = Array::slice.call(arguments, 1)
           @logActionCall actionsName, method, callArgs
           func.apply actions, callArgs
