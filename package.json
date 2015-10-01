@@ -2,7 +2,7 @@
   "name": "appkit-tide",
   "version": "0.1.0",
   "description": "",
-  "main": "src/tide/index.coffee",
+  "main": "lib/tide/index.js",
   "author": "",
   "license": "MIT",
   "devDependencies": {
