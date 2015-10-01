@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/tide/index.coffee",
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^2.3.0",
     "chai-as-promised": "^5.0.0",
