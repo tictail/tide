@@ -1,0 +1,5 @@
+deployment:
+  gemfury:
+    branch: master
+    commands:
+      - make release
