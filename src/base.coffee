@@ -10,7 +10,7 @@ wrap = require "lodash.wrap"
 TideComponent = require "./component"
 Utils = require "./utils"
 
-class Tide extends EventEmitter
+class Base extends EventEmitter
   state: null
 
   constructor: ->
@@ -108,4 +108,4 @@ class Tide extends EventEmitter
           React.createElement(componentClass, @props)
         )
 
-module.exports = Tide
+module.exports = Base

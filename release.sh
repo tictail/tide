@@ -1,7 +1,5 @@
 #!/bin/bash
 
-find lib -type f | perl -n -e'/lib\/(.+).js/ && printf "module.exports.%s = require(\"lib/%s\");\n", $1, $1' > index.js
-
 set -e
 
 VERSION=`grep "version" package.json | cut -d '"' -f 4`

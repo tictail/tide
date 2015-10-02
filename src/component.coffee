@@ -14,7 +14,7 @@ NOT_KEY_PATH_PROPS = [
 excludedProps = {}
 NOT_KEY_PATH_PROPS.map (prop) -> excludedProps[prop] = true
 
-class TideComponent extends React.Component
+class Component extends React.Component
   @displayName: "TideComponent"
 
   @contextTypes:
@@ -91,4 +91,4 @@ class TideComponent extends React.Component
     else
       React.createElement "span", null, React.Children.map(@props.children, @wrapChild)
 
-module.exports = TideComponent
+module.exports = Component
