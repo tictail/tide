@@ -13,8 +13,8 @@ chai.use sinonChai
 mocha.setup "bdd"
 
 
-require "./tide"
-require "./tide/component"
+require "./base_test"
+require "./component_test"
 
 if window.mochaPhantomJS
   mochaPhantomJS.run()

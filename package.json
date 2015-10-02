@@ -2,7 +2,7 @@
   "name": "appkit-tide",
   "version": "0.1.1",
   "description": "",
-  "main": "lib/tide/index.js",
+  "main": "lib/base.js",
   "author": "",
   "license": "MIT",
   "repository": "git@github.com:tictail/appkit-tide.git",

@@ -3,8 +3,8 @@ React = require "react/addons"
 TestUtils = React.addons.TestUtils
 Immutable = require "immutable"
 
-Tide = require "tide"
-TideComponent = require "tide/component"
+Tide = require "base"
+TideComponent = require "component"
 
 describe "TideComponent", ->
   beforeEach ->

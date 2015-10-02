@@ -21,13 +21,13 @@ module.exports =
 
   plugins: [
     new HtmlWebpackPlugin(
-      template: "tests/tests.html"
-      filename: "tests.html"
+      template: "tests/index.html"
+      filename: "index.html"
     )
   ]
 
   entry:
-    tests: "./tests/tests.coffee"
+    tests: "./tests/index.coffee"
 
   devtool: "eval"
 

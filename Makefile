@@ -16,7 +16,7 @@ build: clean
 
 test: clean
 	webpack
-	mocha-phantomjs build/tests.html
+	mocha-phantomjs build/index.html
 
 release: build
 	@./release.sh
