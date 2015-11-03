@@ -1,9 +1,9 @@
 React = require "react/addons"
+Immutable = require "immutable"
+{TestUtils} = React.addons
+
 Tide = require "base"
 wrap = require "wrap"
-Immutable = require "immutable"
-
-TestUtils = React.addons.TestUtils
 
 describe "wrap", ->
   beforeEach ->

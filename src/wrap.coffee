@@ -1,4 +1,5 @@
 React = require "react"
+
 TideComponent = require "./component"
 
 module.exports = (componentClass, tideProps) ->
