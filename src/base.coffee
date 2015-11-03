@@ -101,11 +101,4 @@ class Base extends EventEmitter
   emitChange: ->
     @emit "change"
 
-  @wrap: (componentClass, tideProps) ->
-    React.createClass
-      render: ->
-        React.createElement(TideComponent, tideProps,
-          React.createElement(componentClass, @props)
-        )
-
 module.exports = Base

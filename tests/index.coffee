@@ -15,6 +15,7 @@ mocha.setup "bdd"
 
 require "./base_test"
 require "./component_test"
+require "./wrap_test"
 
 if window.mochaPhantomJS
   mochaPhantomJS.run()
