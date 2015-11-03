@@ -29,6 +29,22 @@ describe "Tide", ->
       console.log.should.have.been.calledWith "%cAction performed", "font-weight: bold;", "foo.bar", "hello", "world"
       spy.should.have.been.calledWith "hello", "world"
 
+    it "doesn't automatically bind the instance to action methods", ->
+      spy = Sinon.spy()
+
+      class FooActions extends Actions
+        barCaller: ->
+          bar = @bar
+          bar()
+
+        bar: spy
+
+      @tideInstance.addActions "foo", FooActions
+      @tideInstance.enableLogging actions: true
+
+      @tideInstance.getActions("foo").barCaller()
+      spy.should.not.have.been.calledOn @tideInstance.getActions("foo")
+
     it "logs state updates when `state` is true", ->
       @sandbox.stub console, "group"
       @sandbox.stub console, "groupEnd"
