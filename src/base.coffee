@@ -57,13 +57,15 @@ class Base extends EventEmitter
     @logging.components = true if components
 
   wrapActionMethods: ->
-    forEach @actions, (actions, actionsName) =>
+    logActionCall = @logActionCall.bind this
+
+    forEach @actions, (actions, actionsName) ->
       methods = keys Utils.getInternalMethods(actions.constructor)
-      forEach methods, (method) =>
-        actions[method] = wrap actions[method], (func) =>
+      forEach methods, (method) ->
+        actions[method] = wrap actions[method], (func) ->
           callArgs = Array::slice.call(arguments, 1)
-          @logActionCall actionsName, method, callArgs
-          func.apply actions, callArgs
+          logActionCall actionsName, method, callArgs
+          func.apply this, callArgs
 
   logActionCall: (actionsName, methodName, args) ->
     return unless @logging.actions
