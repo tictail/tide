@@ -1,6 +1,7 @@
 React = require "react/addons"
 Sinon = require "sinon"
 Immutable = require "immutable"
+assign = require "lodash.assign"
 {TestUtils} = React.addons
 
 Tide = require "base"
@@ -10,43 +11,48 @@ describe "wrap", ->
   beforeEach ->
     @tideInstance = new Tide
 
-  it "wraps the given component class with a tide component", ->
+  createWrappedComponent = (tideInstance, renderSpy, tideProps = {}) ->
     Child = React.createClass
       render: ->
-        @props.tide.should.exist
+        renderSpy?.call this
         null
 
-    Wrapped = wrap Child, tide: @tideInstance
+    wrap Child, assign({tide: tideInstance}, tideProps)
+
+  it "wraps the given component class with a tide component", ->
+    spy = Sinon.spy()
+
+    Wrapped = createWrappedComponent @tideInstance, ->
+      spy @props.tide
+
     TestUtils.renderIntoDocument React.createElement(Wrapped)
+    spy.firstCall.args[0].should.exist
 
   it "passes the given props to the tide component", ->
     @tideInstance.setState Immutable.Map(foo: "bar")
+    spy = Sinon.spy()
 
-    Child = React.createClass
-      render: ->
-        @props.stateProp.should.equal "bar"
-        null
+    Wrapped = createWrappedComponent @tideInstance, ->
+      spy @props.stateProp
+    , stateProp: "foo"
 
-    Wrapped = wrap Child, tide: @tideInstance, stateProp: "foo"
     TestUtils.renderIntoDocument React.createElement(Wrapped)
+    spy.firstCall.args[0].should.equal "bar"
 
   it "passes props given to the wrap component to the child", ->
-    Child = React.createClass
-      render: ->
-        @props.childProp.should.equal "foo"
-        null
+    spy = Sinon.spy()
 
-    Wrapped = wrap Child, tide: @tideInstance
+    Wrapped = createWrappedComponent @tideInstance, ->
+      spy @props.childProp
+
     TestUtils.renderIntoDocument React.createElement(Wrapped, childProp: "foo")
+    spy.firstCall.args[0].should.equal "foo"
 
   it "re-renders the child when given new props", ->
     spy = Sinon.spy()
-    Child = React.createClass
-      render: ->
-        spy @props.childProp
-        null
 
-    Wrapped = wrap Child, tide: @tideInstance
+    Wrapped = createWrappedComponent @tideInstance, ->
+      spy @props.childProp
 
     parentSetState = null
     Parent = React.createClass
@@ -67,12 +73,9 @@ describe "wrap", ->
 
   it "does not re-render the child when given the same props", ->
     spy = Sinon.spy()
-    Child = React.createClass
-      render: ->
-        spy @props.childProp
-        null
 
-    Wrapped = wrap Child, tide: @tideInstance
+    Wrapped = createWrappedComponent @tideInstance, ->
+      spy @props.childProp
 
     parentSetState = null
     Parent = React.createClass
@@ -92,12 +95,10 @@ describe "wrap", ->
 
   it "always re-renders when impure is true", ->
     spy = Sinon.spy()
-    Child = React.createClass
-      render: ->
-        spy @props.childProp
-        null
 
-    Wrapped = wrap Child, tide: @tideInstance, impure: true
+    Wrapped = createWrappedComponent @tideInstance, ->
+      spy @props.childProp
+    , impure: true
 
     parentSetState = null
     Parent = React.createClass
