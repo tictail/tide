@@ -1,5 +1,5 @@
 React = require "react"
-shallowEqual = require "react/lib/shallowEqual"
+shallowEqual = require "react-pure-render/shallowEqual"
 assign = require "lodash.assign"
 
 TideComponent = require "./component"

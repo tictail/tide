@@ -1,6 +1,6 @@
 Sinon = require "sinon"
-React = require "react/addons"
-TestUtils = React.addons.TestUtils
+React = require "react"
+TestUtils = require "react-addons-test-utils"
 Immutable = require "immutable"
 
 Tide = require "base"
