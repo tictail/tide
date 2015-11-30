@@ -1,5 +1,7 @@
-React = require "react/addons"
-ShallowEqual = require "react/lib/shallowEqual"
+React = require "react"
+{findDOMNode} = require "react-dom"
+cloneWithProps = require "react-addons-clone-with-props"
+shallowEqual = require "react-pure-render/shallowEqual"
 assign = require "lodash.assign"
 isArray = require "lodash.isarray"
 mapValues = require "lodash.mapvalues"
@@ -45,14 +47,14 @@ class Component extends React.Component
 
   shouldComponentUpdate: ->
     shouldUpdate = !!@props.impure
-    @getTide().logComponentRender("parent", React.findDOMNode(this)) if shouldUpdate
+    @getTide().logComponentRender("parent", findDOMNode(this)) if shouldUpdate
     shouldUpdate
 
   onStateChange: =>
     return if @_isUnmounting
     if @hasStaleProps()
       @forceUpdate()
-      @getTide().logComponentRender "state", React.findDOMNode(this)
+      @getTide().logComponentRender "state", findDOMNode(this)
 
   getKeyPaths: (props) ->
     keyPaths = omit(props, (value, key) -> excludedProps[key])
@@ -72,7 +74,7 @@ class Component extends React.Component
       return state.getIn value
 
   hasStaleProps: =>
-    not ShallowEqual @_props, @getPropsFromKeyPaths(@_keyPaths)
+    not shallowEqual(@_props, @getPropsFromKeyPaths(@_keyPaths))
 
   getChildProps: ->
     keyPaths = assign {}, @_keyPaths
@@ -83,12 +85,16 @@ class Component extends React.Component
         actions: @getTide().getActions()
 
   wrapChild: (child) =>
-    React.addons.cloneWithProps child, @getChildProps()
+    React.cloneElement child, @getChildProps()
 
   render: ->
     if React.Children.count(@props.children) is 1
       @wrapChild @props.children
     else
-      React.createElement "span", null, React.Children.map(@props.children, @wrapChild)
+      React.createElement(
+        'span',
+        null,
+        React.Children.map(@props.children, @wrapChild)
+      )
 
 module.exports = Component

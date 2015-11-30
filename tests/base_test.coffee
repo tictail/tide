@@ -1,6 +1,7 @@
 Sinon = require "sinon"
-React = require "react/addons"
-TestUtils = React.addons.TestUtils
+React = require "react"
+{findDOMNode} = require "react-dom"
+TestUtils = require "react-addons-test-utils"
 Immutable = require "immutable"
 
 Tide = require "base"
@@ -66,7 +67,7 @@ describe "Tide", ->
       domNode = undefined
       Child = React.createClass
         componentDidMount: ->
-          domNode = React.findDOMNode this
+          domNode = findDOMNode this
         render: ->
           React.createElement "div", {}, "Hello World"
 
@@ -90,7 +91,7 @@ describe "Tide", ->
 
       Child = React.createClass
         componentDidMount: ->
-          domNode = React.findDOMNode this
+          domNode = findDOMNode this
         render: ->
           React.createElement "div", {}, "Hello World"
 

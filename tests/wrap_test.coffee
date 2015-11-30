@@ -1,8 +1,8 @@
-React = require "react/addons"
+React = require "react"
 Sinon = require "sinon"
 Immutable = require "immutable"
 assign = require "lodash.assign"
-{TestUtils} = React.addons
+TestUtils = require "react-addons-test-utils"
 
 Tide = require "base"
 wrap = require "wrap"
@@ -115,4 +115,3 @@ describe "wrap", ->
 
     (-> spy.callCount).should.increase.when ->
       parentSetState childProp: "foo"
-

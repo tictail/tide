@@ -1,3 +1,6 @@
+### 0.5.0 2015-11-30
+* Update React to 0.14
+
 ### 0.4.0 2015-11-18
 * Components created with `wrap` now re-render when given new properties from the parent.
 
