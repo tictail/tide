@@ -66,12 +66,13 @@ class Component extends React.Component
 
   getPropsFromKeyPaths: (keyPaths) ->
     state = @getTide().getState()
-    mapValues keyPaths, (value) ->
+    props = mapValues keyPaths, (value) ->
       [..., last] = value
       if last is "toJS()"
         obj = state.getIn value.slice 0, -1
         return obj?.toJS()
       return state.getIn value
+    omit props, (value) -> value is undefined
 
   hasStaleProps: =>
     not shallowEqual(@_props, @getPropsFromKeyPaths(@_keyPaths))
