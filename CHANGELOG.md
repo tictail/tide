@@ -1,3 +1,6 @@
+### 0.6.0 2015-12-03
+* If there is no set state in a given `keyPath`, `TideComponent` **should not** pass `undefined` to the wrapped component as a prop. Therefore, the wrapped component's `defaultProps` will be available
+
 ### 0.5.0 2015-11-30
 * Update React to 0.14
 
