@@ -124,6 +124,17 @@ describe "TideComponent", ->
       tree = React.createElement TideComponent, {tide: @tide, foo: ["nested", "foo"]}, Child
       TestUtils.renderIntoDocument tree
 
+    it "doesn't pass props that are undefined", ->
+      Child = createComponent ->
+        @props.hasOwnProperty('foo').should.be.false
+
+      @tide.setState Immutable.Map()
+      tree = React.createElement TideComponent, {
+        tide: @tide,
+        foo: ["non-existing-state-path"]
+      }, Child
+      TestUtils.renderIntoDocument tree
+
   describe "Updates", ->
     it "re-renders when the data in any of the listened paths in the state has changed", ->
       spy = Sinon.spy()
