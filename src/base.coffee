@@ -76,7 +76,7 @@ class Base extends EventEmitter
   logStateUpdate: (currentState, nextState) ->
     return unless @logging.state
 
-    console.group "%cState mutation", "font-weight: bold;"
+    console.group? "%cState mutation", "font-weight: bold;"
     console.log "%cCurrent state", "color: gray; font-weight: bold; %O", currentState.toJS()
     operations = diff(currentState, nextState)
     if operations.size > 1
@@ -87,7 +87,7 @@ class Base extends EventEmitter
     else
       console.log("%cOperation", "font-weight: bold;", "Noop")
     console.log "%cNext state", "color: green; font-weight: bold; %O", nextState?.toJS()
-    console.groupEnd()
+    console.groupEnd?()
 
   logComponentRender: (source, component) ->
     return unless @logging.components
