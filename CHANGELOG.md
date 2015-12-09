@@ -1,3 +1,6 @@
+### 0.6.1 2015-12-09
+* Only use `console.group` for logging when available in the browser.
+
 ### 0.6.0 2015-12-03
 * If there is no set state in a given `keyPath`, `TideComponent` **should not** pass `undefined` to the wrapped component as a prop. Therefore, the wrapped component's `defaultProps` will be available
 
