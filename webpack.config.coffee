@@ -16,7 +16,8 @@ module.exports =
 
   module:
     loaders: [
-      { test: /\.coffee$/, loaders: ["coffee-loader"] }
+      {test: /\.js$/, exclude: /node_modules/, loaders: ["babel?presets[]=es2015"]}
+      {test: /\.coffee$/, loaders: ["coffee"]}
     ]
 
   plugins: [
