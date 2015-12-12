@@ -8,7 +8,7 @@ wrap = require "lodash.wrap"
 {EventEmitter} = require "events"
 
 TideComponent = require "./component"
-Utils = require "./utils"
+Utils = require("./utils").default
 
 class Base extends EventEmitter
   state: null
