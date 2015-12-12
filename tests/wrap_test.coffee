@@ -5,7 +5,7 @@ assign = require "lodash.assign"
 TestUtils = require "react-addons-test-utils"
 
 Tide = require "base"
-wrap = require "wrap"
+wrap = require("wrap").default
 
 describe "wrap", ->
   beforeEach ->
