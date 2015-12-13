@@ -4,7 +4,7 @@ React = require "react"
 TestUtils = require "react-addons-test-utils"
 Immutable = require "immutable"
 
-Tide = require "base"
+Tide = require("base").default
 Actions = require("actions").default
 TideComponent = require "component"
 
