@@ -4,7 +4,7 @@ TestUtils = require "react-addons-test-utils"
 Immutable = require "immutable"
 
 Tide = require("base").default
-TideComponent = require "component"
+TideComponent = require("component").default
 
 describe "TideComponent", ->
   beforeEach ->

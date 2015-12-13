@@ -6,7 +6,7 @@ Immutable = require "immutable"
 
 Tide = require("base").default
 Actions = require("actions").default
-TideComponent = require "component"
+TideComponent = require("component").default
 
 describe "Tide", ->
   beforeEach ->
