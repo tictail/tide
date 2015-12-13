@@ -8,7 +8,6 @@ import forEach from 'lodash.foreach'
 import mapValues from 'lodash.mapvalues'
 import omit from 'lodash.omit'
 
-
 const displayName = 'TideComponent'
 const contextTypes = {tide: React.PropTypes.object}
 const childContextTypes = {tide: React.PropTypes.object}
