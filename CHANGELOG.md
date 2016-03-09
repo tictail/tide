@@ -1,3 +1,6 @@
+### 0.7.0 2016-03-09
+* Only use `console.group` for logging when available in the browser.
+
 ### 0.6.1 2015-12-09
 * Only use `console.group` for logging when available in the browser.
 
