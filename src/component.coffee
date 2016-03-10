@@ -1,6 +1,5 @@
 React = require "react"
 {findDOMNode} = require "react-dom"
-cloneWithProps = require "react-addons-clone-with-props"
 shallowEqual = require "react-pure-render/shallowEqual"
 assign = require "lodash.assign"
 isArray = require "lodash.isarray"
