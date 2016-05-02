@@ -4,9 +4,9 @@ import assign from 'lodash.assign'
 
 import TideComponent from './component'
 
-export default function(componentClass, tideProps = {}) {
-  let isImpure = tideProps.impure
-  tideProps = assign({}, tideProps, {impure: true})
+module.exports = function(componentClass, initialTideProps = {}) {
+  const isImpure = initialTideProps.impure
+  const tideProps = assign({}, initialTideProps, {impure: true})
 
   return React.createClass({
     shouldComponentUpdate(nextProps) {

@@ -4,8 +4,8 @@ Immutable = require "immutable"
 assign = require "lodash.assign"
 TestUtils = require "react-addons-test-utils"
 
-Tide = require("base").default
-wrap = require("wrap").default
+Tide = require "base"
+wrap = require "wrap"
 
 describe "wrap", ->
   beforeEach ->

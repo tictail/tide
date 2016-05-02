@@ -3,8 +3,8 @@ React = require "react"
 TestUtils = require "react-addons-test-utils"
 Immutable = require "immutable"
 
-Tide = require("base").default
-TideComponent = require("component").default
+Tide = require "base"
+TideComponent = require "component"
 
 describe "TideComponent", ->
   beforeEach ->
@@ -136,15 +136,19 @@ describe "TideComponent", ->
       TestUtils.renderIntoDocument tree
 
   describe "Updates", ->
-    it "re-renders when the data in any of the listened paths in the state has changed", ->
+    it "re-renders when the data in any of the listened paths in the state has changed", (done) ->
       spy = Sinon.spy()
       Child = createComponent spy
       @tide.setState Immutable.Map(foo: "foo")
 
       tree = React.createElement TideComponent, {tide: @tide, foo: ["foo"]}, Child
       TestUtils.renderIntoDocument tree
-      (-> spy.callCount).should.increase.when =>
-        @tide.updateState (state) -> state.set "foo", "bar"
+      (spy.callCount).should.equal(1)
+      @tide.updateState (state) -> state.set "foo", "bar"
+      setTimeout((() ->
+        (spy.callCount).should.equal(2)
+        done()
+      ), 0)
 
     it "does not re-render if none of the listened to data has changed on an update", ->
       spy = Sinon.spy()
@@ -153,8 +157,11 @@ describe "TideComponent", ->
 
       tree = React.createElement TideComponent, {tide: @tide, foo: ["foo"]}, Child
       TestUtils.renderIntoDocument tree
-      (-> spy.callCount).should.not.increase.when =>
-        @tide.updateState (state) -> state.set "bar", "foo"
+      (spy.callCount).should.equal(1)
+      setTimeout((() ->
+        (spy.callCount).should.equal(1)
+        done()
+      ), 0)
 
     it "does not re-render if something outside of the listened state updates", ->
       tide = @tide
@@ -179,8 +186,12 @@ describe "TideComponent", ->
 
       TestUtils.renderIntoDocument React.createElement(Parent)
 
-      (-> spy.callCount).should.not.increase.when ->
-        parentSetState foo: "bar"
+      (spy.callCount).should.equal(1)
+      parentSetState foo: "bar"
+      setTimeout((() ->
+        (spy.callCount).should.equal(1)
+        done()
+      ), 0)
 
     it "always re-renders if given the `impure` property", ->
       tide = @tide
@@ -196,7 +207,7 @@ describe "TideComponent", ->
           parentSetState = @setState.bind this
 
         render: ->
-          React.createElement TideComponent, {tide: tide, impure: true}, Child
+          React.createElement TideComponent, {tide, impure: true}, Child
 
       TestUtils.renderIntoDocument React.createElement(Parent)
 

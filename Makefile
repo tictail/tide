@@ -2,6 +2,7 @@
 
 export PATH := $(shell npm bin):$(PATH)
 SHELL := /bin/bash
+TEST_CONFIG = NODE_ENV=test BABEL_ENV=test
 
 install:
 	npm prune

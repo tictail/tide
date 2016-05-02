@@ -29,4 +29,4 @@ class Actions {
   }
 }
 
-export default Actions
+module.exports = Actions
