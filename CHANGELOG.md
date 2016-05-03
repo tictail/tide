@@ -1,3 +1,9 @@
+### 1.0.0-beta 2016-03-09
+* Defer state updates
+* Re-written in es6
+* TideComponent uses setState instead of forceUpdate()
+* Component logging removed
+
 ### 0.7.0 2016-03-09
 * Only use `console.group` for logging when available in the browser.
 
