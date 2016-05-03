@@ -13,7 +13,7 @@ clean:
 	rm -rf build
 
 build: clean
-	coffee -o lib -c src
+	./node_modules/.bin/babel src -d lib
 
 test: clean
 	webpack
