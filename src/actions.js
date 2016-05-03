@@ -21,11 +21,11 @@ class Actions {
   }
 
   get(keyPath) {
-    this.tide.get(keyPath)
+    return this.tide.get(keyPath)
   }
 
   getActions(name) {
-    this.tide.getActions(name)
+    return this.tide.getActions(name)
   }
 }
 
