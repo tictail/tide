@@ -1,0 +1,15 @@
+{
+  "presets": ["es2015-loose", "react", "stage-2"],
+  "plugins": [
+    "transform-proto-to-assign",
+    "syntax-object-rest-spread",
+    "transform-object-rest-spread"
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        "rewire"
+      ]
+    }
+  }
+}

@@ -16,18 +16,19 @@ module.exports =
 
   module:
     loaders: [
-      { test: /\.coffee$/, loaders: ["coffee-loader"] }
+      {test: /\.js$/, exclude: /node_modules/, loaders: ["babel?presets[]=es2015"]}
+      {test: /\.coffee$/, loaders: ["coffee"]}
     ]
 
   plugins: [
     new HtmlWebpackPlugin(
-      template: "tests/index.html"
+      template: "test/index.html"
       filename: "index.html"
     )
   ]
 
   entry:
-    tests: "./tests/index.coffee"
+    tests: "./test/index.coffee"
 
   devtool: "eval"
 
