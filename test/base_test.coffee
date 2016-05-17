@@ -45,6 +45,15 @@ describe "Tide", ->
       @tideInstance.getActions("foo").barCaller()
       spy.should.not.have.been.calledOn @tideInstance.getActions("foo")
 
+    it "still returns values from wrapped actions", ->
+      class FooActions extends Actions
+        bar: -> "baz"
+
+      @tideInstance.addActions "foo", FooActions
+      @tideInstance.enableLogging actions: true
+
+      @tideInstance.getActions("foo").bar().should.equal "baz"
+
     it "logs state updates when `state` is true", ->
       @sandbox.stub console, "group"
       @sandbox.stub console, "groupEnd"

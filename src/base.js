@@ -71,7 +71,7 @@ class Base {
         actions[method] = wrap(actions[method], function(func) {
           const callArgs = Array.prototype.slice.call(arguments, 1)
           logActionCall(actionsName, method, callArgs)
-          func.apply(this, callArgs)
+          return func.apply(this, callArgs)
         })
       })
     })
