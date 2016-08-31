@@ -34,7 +34,7 @@ class Base {
 
   mutate(keyPath, value) {
     const kp = isArray(keyPath) ? keyPath : keyPath.split('.')
-    const val = typeof value === 'function' ? value(this.getState().getIn(keyPath)) : value
+    const val = typeof value === 'function' ? value(this.getState().getIn(kp)) : value
     this.setState(this.getState().setIn(kp, val))
   }
 
