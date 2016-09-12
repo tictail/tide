@@ -1,5 +1,5 @@
 import React from 'react'
-import {wrap} from 'appkit-tide'
+import {wrap} from 'tictail-tide'
 
 const TodoInput = React.createClass({
   onChange(e) {
