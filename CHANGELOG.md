@@ -1,3 +1,7 @@
+### 1.0.0 2016-09-12
+* Rename package to `tictail-tide`
+* Public release
+
 ### 1.0.0-beta 2016-03-09
 * Defer state updates
 * Re-written in es6
