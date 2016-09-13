@@ -36,14 +36,8 @@ class TodoActions extends Actions {
         title: title.trim(),
       })
 
-      // If we are planning to make multiple state changes,
-      // it's better to use `this.updateState` so that we don't
-      // emit more than one change event.
-      this.updateState((state) => (
-        state
-          .set('todos', state.get('todos').set(item.get('id'), item))
-          .set('todoInputText', '')
-      ))
+      this.mutate(['todos', item.get('id')], item)
+      this.mutate('todoInputText', '')
       this.storeTodos()
     }
   }
