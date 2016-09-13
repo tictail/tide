@@ -1,5 +1,5 @@
 import React from 'react'
-import {wrap, Component as TideComponent} from 'appkit-tide'
+import {wrap, Component as TideComponent} from 'tictail-tide'
 
 import TodoItem from './todo-item'
 

@@ -14,11 +14,11 @@ GIT_RET_CODE=$?
 set -e
 
 if [ ${GIT_RET_CODE} -eq 0 ]; then
-    curl --fail -F package=@`ls -1 appkit-*.tgz | sort -r | head -1` ${GEMFURY_INDEX}
+    curl --fail -F package=@`ls -1 tictail-*.tgz | sort -r | head -1` ${GEMFURY_INDEX}
     echo "Pushing git tag ${VERSION}"
     ${GIT_CMD} push --tags
 else
     echo "Creating git tag failed, most likely due to tag already existing - upload to Gemfury skipped"
 fi
 
-rm -rf appkit-tide*.tgz
+rm -rf tictail-tide*.tgz

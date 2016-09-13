@@ -1,8 +1,8 @@
 import Immutable from 'immutable'
-import {Actions} from 'appkit-tide'
+import {Actions} from 'tictail-tide'
 import uuid from 'node-uuid'
 
-const STORAGE_KEY = 'todos-appkit'
+const STORAGE_KEY = 'todos-tide'
 // Actions are a set of methods that handle updates
 // to the global state in response to user interaction. You should
 // also do tracking and other non state modifying things here

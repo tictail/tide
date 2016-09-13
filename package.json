@@ -1,11 +1,11 @@
 {
-  "name": "appkit-tide",
-  "version": "1.0.0-beta5",
+  "name": "tictail-tide",
+  "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
   "author": "",
   "license": "MIT",
-  "repository": "git@github.com:tictail/appkit-tide.git",
+  "repository": "git@github.com:tictail/tide.git",
   "devDependencies": {
     "babel-cli": "^6.8.0",
     "babel-core": "^6.3.15",

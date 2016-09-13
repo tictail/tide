@@ -1,3 +1,7 @@
+### 1.0.0 2016-09-12
+* Rename package to `tictail-tide`
+* Public release
+
 ### 1.0.0-beta 2016-03-09
 * Defer state updates
 * Re-written in es6
@@ -23,4 +27,4 @@
 * `enableLogging` should no longer automatically bind all action methods to their instance.
 
 ### 0.2.0 2015-11-03
-* `Tide.wrap` has been moved to its own module. The function is now accessible through `{wrap} = require "appkit-tide"`
+* `Tide.wrap` has been moved to its own module. The function is now accessible through `import {wrap} from 'tictail-tide'`

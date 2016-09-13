@@ -1,5 +1,5 @@
 import React from 'react'
-import {wrap} from 'appkit-tide'
+import {wrap} from 'tictail-tide'
 
 const ToggleAll = React.createClass({
   onChange() {

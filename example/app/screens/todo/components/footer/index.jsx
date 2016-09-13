@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
-import {wrap} from 'appkit-tide'
+import {wrap} from 'tictail-tide'
 import classNames from 'classnames'
 
 const FILTERS = [
