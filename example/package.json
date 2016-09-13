@@ -1,0 +1,34 @@
+{
+  "name": "tide-todos",
+  "version": "0.0.0",
+  "dependencies": {
+    "classnames": "^2.1.3",
+    "immutable": "^3.7.5",
+    "node-uuid": "^1.4.3",
+    "query-string": "^2.4.1",
+    "qwest": "2.0.5",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react-router": "^2.7.0",
+    "tictail-tide": "^1.0.0",
+    "todomvc-app-css": "^2.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.4.0",
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-2": "^6.13.0",
+    "css-loader": "^0.12.1",
+    "html-webpack-plugin": "^2.0.4",
+    "json-loader": "^0.5.4",
+    "node-sass": "^3.8.0",
+    "postcss-loader": "^0.6.0",
+    "react-hot-loader": "^1.3.0",
+    "sass-loader": "^1.0.4",
+    "style-loader": "^0.12.4",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.15.0"
+  }
+}
