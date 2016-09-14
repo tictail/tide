@@ -1,7 +1,7 @@
 # ![tide](https://cloud.githubusercontent.com/assets/847651/18448327/b029ad60-78f8-11e6-9ca4-eff619c8a2c8.png)
 ### A Flux-like State Management Library for React by your friends at [Tictail](https://tictail.com)
 
-[![NPM](https://img.shields.io/npm/v/tictail-tide.svg)](https://www.npmjs.com/package/tictail-tide) [![CircleCI](https://circleci.com/gh/tictail/tide.svg?style=shield&circle-token=4032b46b2b7f6cc85eeebbf605baf40e755ca8db)](https://circleci.com/gh/tictail/tide)
+[![NPM](https://img.shields.io/npm/v/tictail-tide.svg)](https://www.npmjs.com/package/tictail-tide) [![CircleCI](https://circleci.com/gh/tictail/tide.svg?style=shield&circle-token=7cb8ffee9ae3acc8e92c68c8beff08ab66283112)](https://circleci.com/gh/tictail/tide)
 
 ## Intro
 
