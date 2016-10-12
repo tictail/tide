@@ -1,3 +1,7 @@
+### 1.0.2 2016-10-12
+* Only bumping version to re-publish to NPM.
+* Add description in `package.json`.
+
 ### 1.0.1 2016-10-11
 * Remove duplicates of `eslint-plugin-mocha` and `eslint-plugin-react` in `package.json`.
 
