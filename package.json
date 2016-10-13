@@ -1,6 +1,6 @@
 {
-  "name": "tictail-tide",
-  "version": "1.0.2",
+  "name": "tide",
+  "version": "1.0.3",
   "description": "A Flux-like State Management Library for React by your friends at Tictail.",
   "main": "lib/index.js",
   "license": "MIT",

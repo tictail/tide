@@ -1,3 +1,6 @@
+### 1.0.3 2016-10-13
+* Move package to `tide` on npm
+
 ### 1.0.2 2016-10-12
 * Only bumping version to re-publish to NPM.
 * Add description in `package.json`.
