@@ -3,7 +3,7 @@ machine:
     version: 6.1.0
 
 deployment:
-  gemfury:
+  npm:
     branch: master
     commands:
       - make release
