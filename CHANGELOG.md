@@ -1,3 +1,6 @@
+### 1.0.4 2016-10-18
+* Rename package to `tide`
+
 ### 1.0.3 2016-10-13
 * Move package to `tide` on npm
 

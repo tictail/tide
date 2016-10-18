@@ -1,5 +1,5 @@
 import React from 'react'
-import {wrap} from 'tictail-tide'
+import {wrap} from 'tide'
 
 import ToggleAll from './toggle-all'
 import TodoList from './todo-list'
