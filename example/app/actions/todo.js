@@ -1,5 +1,5 @@
 import Immutable from 'immutable'
-import {Actions} from 'tictail-tide'
+import {Actions} from 'tide'
 import uuid from 'node-uuid'
 
 const STORAGE_KEY = 'todos-tide'

@@ -1,4 +1,4 @@
-import {Base} from 'tictail-tide'
+import {Base} from 'tide'
 
 import State from 'app/state'
 import TodoActions from 'app/actions/todo'

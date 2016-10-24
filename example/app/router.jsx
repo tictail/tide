@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Route, Router, browserHistory} from 'react-router'
-import {Component as TideComponent} from 'tictail-tide'
+import {Component as TideComponent} from 'tide'
 
 import Tide from 'app/tide'
 import App from 'app/screens/app/index'

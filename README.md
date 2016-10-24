@@ -1,6 +1,6 @@
 # ![tide](https://cloud.githubusercontent.com/assets/847651/18448327/b029ad60-78f8-11e6-9ca4-eff619c8a2c8.png)
 
-[![NPM](https://img.shields.io/npm/v/tictail-tide.svg)](https://www.npmjs.com/package/tictail-tide) [![CircleCI](https://circleci.com/gh/tictail/tide.svg?style=shield&circle-token=7cb8ffee9ae3acc8e92c68c8beff08ab66283112)](https://circleci.com/gh/tictail/tide)
+[![NPM](https://img.shields.io/npm/v/tide.svg)](https://www.npmjs.com/package/tide) [![CircleCI](https://circleci.com/gh/tictail/tide.svg?style=shield&circle-token=7cb8ffee9ae3acc8e92c68c8beff08ab66283112)](https://circleci.com/gh/tictail/tide)
 
 ## Intro
 
@@ -13,7 +13,7 @@ We've been using Tide in production at [Tictail](https://tictail.com) since 2015
 Tide is hosted on NPM. To install it and add it to your `package.json` in one fell swoop, just run:
 
 ```
-npm install --save tictail-tide
+npm install --save tide
 ```
 
 ## Example
@@ -38,7 +38,7 @@ To explain the benefits of keeping this value in our global state, let’s take 
 
 ```JavaScript
 import Immutable from 'immutable'
-import {Actions} from 'tictail-tide'
+import {Actions} from 'tide'
 import uuid from 'node-uuid'
 
 class TodoActions extends Actions {
@@ -74,7 +74,7 @@ The final code snippet to tie this example together is our input field component
 
 ```JavaScript
 import React from 'react'
-import {wrap} from 'tictail-tide'
+import {wrap} from 'tide'
 
 const TodoInput = React.createClass({
   onChange(e) {
