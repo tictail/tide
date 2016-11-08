@@ -5,7 +5,8 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 
 module.exports = {
   resolveLoader: {
-    moduleDirectories: ['node_modules']
+    moduleDirectories: ['node_modules'],
+    fallback: path.join(__dirname, 'node_modules'),
   },
 
   output: {
@@ -22,25 +23,21 @@ module.exports = {
     }
   },
 
-  resolveLoader: {
-    fallback: path.join(__dirname, 'node_modules')
-  },
-
   module: {
     loaders: [
-      { test: /\.css$/, loaders: ['style', 'css'] },
-      { test: /\.scss$/, loaders: ['style', 'css', 'postcss-loader', 'sass'] },
-      { test: /\.json$/, loaders: ['json-loader'] },
+      {test: /\.css$/, loaders: ['style', 'css']},
+      {test: /\.scss$/, loaders: ['style', 'css', 'postcss-loader', 'sass']},
+      {test: /\.json$/, loaders: ['json-loader']},
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-        query: { presets: ['es2015', 'react', 'stage-2'] }
+        query: {presets: ['es2015', 'react', 'stage-2']}
       }
     ]
   },
 
-  postcss: [autoprefixer({ browsers: ['last 2 version'] })],
+  postcss: [autoprefixer({browsers: ['last 2 version']})],
 
   devtool: 'eval',
   debug: true,
