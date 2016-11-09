@@ -22,20 +22,20 @@ class Base {
     return this.state
   }
 
-  setState(state) {
+  setState(state, options) {
     this.logStateUpdate(this.state, state)
     this.state = state
-    this.emitChange()
+    this.emitChange(options)
   }
 
-  updateState(updater) {
-    this.setState(updater(this.state))
+  updateState(updater, options) {
+    this.setState(updater(this.state), options)
   }
 
-  mutate(keyPath, value) {
+  mutate(keyPath, value, options) {
     const kp = isArray(keyPath) ? keyPath : keyPath.split('.')
     const val = typeof value === 'function' ? value(this.getState().getIn(kp)) : value
-    this.setState(this.getState().setIn(kp, val))
+    this.setState(this.getState().setIn(kp, val), options)
   }
 
   get(keyPath) {
@@ -133,13 +133,16 @@ class Base {
     forEach(this.changeHandlers, (fn) => { fn && fn() })
   }
 
-  emitChange() {
-    if (this._willEmit) return
-    this._willEmit = true
-    defer(() => {
-      this._willEmit = false
+  emitChange(options = {}) {
+    if (options.immediate) {
       this.emit()
-    })
+    } else if (!this._willEmit) {
+      this._willEmit = true
+      defer(() => {
+        this._willEmit = false
+        this.emit()
+      })
+    }
   }
 }
 /* eslint-enable no-console */
