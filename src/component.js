@@ -60,7 +60,6 @@ class Component extends React.Component {
 
   onStateChange() {
     if (this._isUnmounting) return
-    this._keyPaths = this.getKeyPaths(this.props)
     const newState = this.getPropsFromKeyPaths(this._keyPaths, this.getTide())
     if (this.hasStaleState(newState)) {
       this.setState(newState)
