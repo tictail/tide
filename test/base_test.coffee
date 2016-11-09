@@ -9,15 +9,12 @@ TideComponent = require "component"
 
 describe "Tide", ->
   beforeEach ->
-    @sandbox = Sinon.sandbox.create()
-    @sandbox.stub console, "log"
     @tideInstance = new Tide()
-
-  afterEach ->
-    @sandbox.restore()
 
   describe "#enableLogging", ->
     it "logs action calls when `actions` is true", ->
+      sandbox = Sinon.sandbox.create()
+      sandbox.stub console, "log"
       spy = Sinon.spy()
       class FooActions extends Actions
         bar: spy
@@ -28,6 +25,7 @@ describe "Tide", ->
       @tideInstance.getActions("foo").bar "hello", "world"
       console.log.should.have.been.calledWith "%cAction performed", "font-weight: bold;", "foo.bar", "hello", "world"
       spy.should.have.been.calledWith "hello", "world"
+      sandbox.restore()
 
     it "doesn't automatically bind the instance to action methods", ->
       spy = Sinon.spy()
@@ -55,8 +53,10 @@ describe "Tide", ->
       @tideInstance.getActions("foo").bar().should.equal "baz"
 
     it "logs state updates when `state` is true", ->
-      @sandbox.stub console, "group"
-      @sandbox.stub console, "groupEnd"
+      sandbox = Sinon.sandbox.create()
+      sandbox.stub console, "group"
+      sandbox.stub console, "log"
+      sandbox.stub console, "groupEnd"
 
       @tideInstance.setState Immutable.Map(foo: "baz")
       @tideInstance.enableLogging state: true
@@ -67,6 +67,8 @@ describe "Tide", ->
       console.log.should.have.been.calledWith "%cOperation", "font-weight: bold;", "replace", "/foo", "bar"
       console.log.should.have.been.calledWith "%cNext state", "color: green; font-weight: bold; %O",  {foo: "bar"}
       console.groupEnd.should.have.been.calledWith()
+
+      sandbox.restore()
 
   describe "#addActions", ->
     it "instantiates the given class with the tide instance as the first argument", ->
@@ -87,6 +89,30 @@ describe "Tide", ->
       @tideInstance.addActions "bar", Object
       @tideInstance.getActions().should.have.keys ["foo", "bar"]
 
+  describe "#setState", ->
+    it "updates the state returned by getState", ->
+      state = foo: "bar"
+      @tideInstance.setState state
+      @tideInstance.getState().should.equal state
+
+    it "emits a change event asynchronously", (done) ->
+      isAsync = false
+      @tideInstance.onChange ->
+        isAsync.should.be.true
+        done()
+
+      @tideInstance.setState("foobar")
+      isAsync = true
+
+    it "emits a change event synchronously when given {immediate: true}", (done) ->
+      isAsync = false
+      @tideInstance.onChange ->
+        isAsync.should.be.false
+        done()
+
+      @tideInstance.setState "foobar", immediate: true
+      isAsync = true
+
   describe "#updateState", ->
     it "calls the given updater with the state as the first argument", ->
       @tideInstance.setState {foo: "bar"}
@@ -97,6 +123,13 @@ describe "Tide", ->
     it "sets the state from the return value of the updater", ->
       @tideInstance.updateState -> "foobar"
       @tideInstance.getState().should.equal "foobar"
+
+    it "calls setState with the given options", ->
+      options = foo: "bar"
+      Sinon.spy @tideInstance, "setState"
+      @tideInstance.updateState (-> "foobar"), options
+      @tideInstance.setState.should.have.been.calledWith "foobar", options
+      @tideInstance.setState.restore()
 
   describe "#mutate", ->
     beforeEach ->
@@ -113,6 +146,13 @@ describe "Tide", ->
     it "mutates the given path with the result of the mutator", ->
       @tideInstance.mutate(['foo', 'bar'], (existing) -> existing.toUpperCase())
       @tideInstance.getState().getIn(['foo', 'bar']).should.equal 'BAZ'
+
+    it "calls setState with the given options", ->
+      options = foo: "bar"
+      Sinon.spy @tideInstance, "setState"
+      @tideInstance.mutate ["foo", "bar"], "xyz", options
+      @tideInstance.setState.should.have.been.calledWith Sinon.match.any, options
+      @tideInstance.setState.restore()
 
   describe "#get", ->
     it "allows you to get a value in state", ->

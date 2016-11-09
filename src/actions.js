@@ -8,16 +8,16 @@ class Actions {
     return this.tide.getState()
   }
 
-  setState(state) {
-    this.tide.setState(state)
+  setState(state, options) {
+    this.tide.setState(state, options)
   }
 
-  updateState(updater) {
-    this.tide.updateState(updater)
+  updateState(updater, options) {
+    this.tide.updateState(updater, options)
   }
 
-  mutate(keyPath, value) {
-    this.tide.mutate(keyPath, value)
+  mutate(keyPath, value, options) {
+    this.tide.mutate(keyPath, value, options)
   }
 
   get(keyPath) {

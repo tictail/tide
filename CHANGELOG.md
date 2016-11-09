@@ -1,3 +1,6 @@
+### 1.1.0 2016-11-09
+* Add a parameter `{immediate: true}` to `setState`, `updateState` and `mutate` to make the change event emit immediately instead of deferring it. See `https://github.com/tictail/tide/issues/11`.
+
 ### 1.0.3 2016-10-13
 * Move package to `tide` on npm
 
