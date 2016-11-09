@@ -1,5 +1,5 @@
 import Immutable from 'immutable'
-import {Actions} from 'tictail-tide'
+import {Actions} from 'tide'
 import uuid from 'node-uuid'
 
 const STORAGE_KEY = 'todos-tide'
@@ -23,8 +23,11 @@ class TodoActions extends Actions {
   setTodoInputText(text) {
     // `this.mutate` mutates a value in the state at the given path.
     // This will trigger a re-render in the components that are listening
-    // to this value.
-    this.mutate('todoInputText', text)
+    // to this value. To preserve the position of the cursor when changing
+    // this value, we need to tell Tide to make the change immediately instead
+    // of applying it asynchronously. You can read more about this behavior in
+    // the docs.
+    this.mutate('todoInputText', text, {immediate: true})
   }
 
   addTodo() {
@@ -63,7 +66,7 @@ class TodoActions extends Actions {
   }
 
   changeTitle(todoKeyPath, value) {
-    this.mutate(todoKeyPath.concat(['title']), value)
+    this.mutate(todoKeyPath.concat(['title']), value, {immediate: true})
     this.storeTodos()
   }
 

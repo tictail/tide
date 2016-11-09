@@ -1,5 +1,5 @@
 import React from 'react'
-import {wrap} from 'tictail-tide'
+import {wrap} from 'tide'
 
 const ToggleAll = React.createClass({
   onChange() {
