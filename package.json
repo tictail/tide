@@ -5,6 +5,9 @@
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "git@github.com:tictail/tide.git",
+  "scripts": {
+    "2npm": "publish"
+  },
   "devDependencies": {
     "babel-cli": "^6.8.0",
     "babel-core": "^6.3.15",
@@ -39,9 +42,10 @@
     "mocha": "^1.21.4",
     "mocha-phantomjs": "^3.5.3",
     "phantomjs": "1.9.7-15",
+    "publish": "^0.6.0",
     "react": "^0.14.3",
     "react-addons-test-utils": "^0.14.3",
-    "sinon": "git://github.com/cjohansen/Sinon.JS#b672042043517b9f84e14ed0fb8265126168778a",
+    "sinon": "^2.0.0-pre.3",
     "sinon-chai": "^2.7.0",
     "webpack": "^1.8.11"
   },
