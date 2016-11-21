@@ -2,6 +2,7 @@ import React from 'react'
 import shallowEqual from 'react-pure-render/shallowEqual'
 import assign from 'lodash.assign'
 import isArray from 'lodash.isarray'
+import isFunction from 'lodash.isfunction'
 import mapValues from 'lodash.mapvalues'
 import omit from 'lodash.omit'
 
@@ -27,17 +28,16 @@ const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
 }, {})
 
 class Component extends React.Component {
-
   constructor(props, context) {
     super(props)
-    const tide = props.tide || context.tide
-    this._keyPaths = this.getKeyPaths(props)
+    const tide = this.getTide()
+    const keyPaths = this.getKeyPaths(props, tide)
     this._componentTide = {
-      keyPaths: this._keyPaths,
+      keyPaths,
       actions: tide.getActions(),
     }
 
-    this.state = this.getPropsFromKeyPaths(this._keyPaths, tide)
+    this.state = this.getPropsFromKeyPaths(keyPaths, tide)
   }
 
   getChildContext() {
@@ -49,10 +49,6 @@ class Component extends React.Component {
     this.getTide().onChange(this._onStateChange)
   }
 
-  componentWillReceiveProps(newProps) {
-    this._keyPaths = this.getKeyPaths(newProps)
-  }
-
   componentWillUnmount() {
     this._isUnmounting = true
     this.getTide().offChange(this._onStateChange)
@@ -60,15 +56,17 @@ class Component extends React.Component {
 
   onStateChange() {
     if (this._isUnmounting) return
-    const newState = this.getPropsFromKeyPaths(this._keyPaths, this.getTide())
+    const tide = this.getTide()
+    const newState = this.getPropsFromKeyPaths(this.getKeyPaths(this.props, tide), tide)
     if (this.hasStaleState(newState)) {
       this.setState(newState)
     }
   }
 
-  getKeyPaths(props) {
+  getKeyPaths(props, tide) {
     let keyPaths = omit(props, (value, key) => { return excludedProps[key] })
-    keyPaths = mapValues(keyPaths, (value, key) => {
+    keyPaths = mapValues(keyPaths, (val, key) => {
+      const value = isFunction(val) ? val(tide.getState()) : val
       if (isArray(value)) return value
       if (value === true) return [key]
       return value.split('.')

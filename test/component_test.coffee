@@ -79,6 +79,20 @@ describe "TideComponent", ->
 
       TestUtils.renderIntoDocument tree
 
+    it "accepts functions to create keypaths based on the current state", ->
+      Child = createComponent ->
+        @props.fooPointer.should.equal "foo"
+
+      state = Immutable.fromJS foo: "foo", path: "foo"
+
+      @tide.setState state
+      tree = React.createElement TideComponent, {
+        tide: @tide
+        fooPointer: (state) -> [state.get "path"]
+      }, Child
+
+      TestUtils.renderIntoDocument tree
+
     it "converts to native JS object if 'toJS()' is given in key path", ->
       Child = createComponent ->
         @props.nested.should.deep.equal foo: "foo"
@@ -149,6 +163,34 @@ describe "TideComponent", ->
         (spy.callCount).should.equal(2)
         done()
       ), 0)
+
+    it "re-renders when a dynamic key path changes", (done) ->
+      spy = Sinon.spy()
+      Child = createComponent ->
+        console.log this.props.pointer
+        spy(this.props.pointer)
+
+      @tide.setState Immutable.Map(
+        foo: "foo"
+        bar: "bar"
+        path: "foo"
+      )
+
+      tree = React.createElement TideComponent, {
+        tide: @tide,
+        pointer: (state) -> [state.get "path"]
+      }, Child
+
+      TestUtils.renderIntoDocument tree
+      (spy.callCount).should.equal(1)
+      spy.should.have.been.calledWith("foo")
+      @tide.updateState (state) -> state.set "path", "bar"
+      setTimeout((() ->
+        (spy.callCount).should.equal(2)
+        spy.should.have.been.calledWith "bar"
+        done()
+      ), 0)
+
 
     it "does not re-render if none of the listened to data has changed on an update", ->
       spy = Sinon.spy()
