@@ -1,3 +1,6 @@
+### 1.2.0 2016-11-21
+* Added support for defining a key path as a function in a Tide component. The function receives the current state as its only argument, and should return the key path in one of the other supported forms.
+
 ### 1.1.0 2016-11-09
 * Add a parameter `{immediate: true}` to `setState`, `updateState` and `mutate` to make the change event emit immediately instead of deferring it. See `https://github.com/tictail/tide/issues/11`.
 
