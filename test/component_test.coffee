@@ -37,6 +37,23 @@ describe "TideComponent", ->
       )
       TestUtils.renderIntoDocument tree
 
+    it "uses tide from context instead of props when directly nesting multiple components", ->
+      tide = @tide
+      Child = React.createClass
+        contextTypes:
+          tide: React.PropTypes.object
+
+        render: ->
+          @context.tide.should.equal tide
+          null
+
+      tree = React.createElement(TideComponent, {tide: @tide},
+        React.createElement(TideComponent, {},
+          React.createElement(Child)
+        )
+      )
+      TestUtils.renderIntoDocument tree
+
   describe "Props", ->
     it "passes down the data of the given key paths as props to the child", ->
       Child = createComponent ->
@@ -173,7 +190,6 @@ describe "TideComponent", ->
     it "re-renders when a dynamic key path changes", (done) ->
       spy = Sinon.spy()
       Child = createComponent ->
-        console.log this.props.pointer
         spy(this.props.pointer)
 
       @tide.setState Immutable.Map(

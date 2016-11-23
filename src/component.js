@@ -6,6 +6,8 @@ import isFunction from 'lodash.isfunction'
 import mapValues from 'lodash.mapvalues'
 import omit from 'lodash.omit'
 
+import TideBase from './base'
+
 const displayName = 'TideComponent'
 const contextTypes = {tide: React.PropTypes.object}
 const childContextTypes = {tide: React.PropTypes.object}
@@ -87,7 +89,7 @@ class Component extends React.Component {
   }
 
   getTide() {
-    return this.props.tide || this.context.tide
+    return this.props.tide instanceof TideBase ? this.props.tide : this.context.tide
   }
 
   getChildProps() {
