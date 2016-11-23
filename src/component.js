@@ -6,6 +6,8 @@ import isFunction from 'lodash.isfunction'
 import mapValues from 'lodash.mapvalues'
 import omit from 'lodash.omit'
 
+import TideBase from './base'
+
 const displayName = 'TideComponent'
 const contextTypes = {tide: React.PropTypes.object}
 const childContextTypes = {tide: React.PropTypes.object}
@@ -29,7 +31,7 @@ const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
 
 class Component extends React.Component {
   constructor(props, context) {
-    super(props)
+    super(props, context)
     const tide = this.getTide()
     const keyPaths = this.getKeyPaths(props, tide)
     this._componentTide = {
@@ -87,7 +89,7 @@ class Component extends React.Component {
   }
 
   getTide() {
-    return this.props.tide || this.context.tide
+    return this.props.tide instanceof TideBase ? this.props.tide : this.context.tide
   }
 
   getChildProps() {
