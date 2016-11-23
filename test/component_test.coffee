@@ -28,7 +28,13 @@ describe "TideComponent", ->
           @context.tide.should.equal tide
           null
 
-      tree = React.createElement TideComponent, {tide: @tide}, React.createElement(Child)
+      tree = React.createElement(TideComponent, {tide: @tide},
+        React.createElement("div", {},
+          React.createElement(TideComponent, {},
+            React.createElement(Child)
+          )
+        )
+      )
       TestUtils.renderIntoDocument tree
 
   describe "Props", ->

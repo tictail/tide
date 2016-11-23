@@ -29,7 +29,7 @@ const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
 
 class Component extends React.Component {
   constructor(props, context) {
-    super(props)
+    super(props, context)
     const tide = this.getTide()
     const keyPaths = this.getKeyPaths(props, tide)
     this._componentTide = {
