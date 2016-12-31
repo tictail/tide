@@ -1,5 +1,4 @@
 /* eslint-disable react/no-multi-comp */
-import Sinon from 'sinon'
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
@@ -7,9 +6,11 @@ import Immutable from 'immutable'
 import Tide from 'base'
 import TideComponent from 'component'
 
+let tideInstance
+
 describe('TideComponent', function() {
   beforeEach(function() {
-    this.tide = new Tide()
+    tideInstance = new Tide()
   })
 
   const createComponent = (render) =>
@@ -18,54 +19,51 @@ describe('TideComponent', function() {
         render.apply(this)
         return null
       }
-    })
-    )
+    }))
 
   describe('Context', function() {
     it('passes down the given tide instance in the context', function() {
-      const {tide} = this
       const Child = React.createClass({
         contextTypes: {
           tide: React.PropTypes.object
         },
 
         render() {
-          this.context.tide.should.equal(tide)
+          expect(this.context.tide).toBe(tideInstance)
           return null
         }
       })
 
-      const tree = React.createElement(TideComponent, {tide: this.tide},
+      const tree = React.createElement(TideComponent, {tide: tideInstance},
         React.createElement('div', {},
           React.createElement(TideComponent, {},
             React.createElement(Child)
           )
         )
       )
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
 
     it(
       'uses tide from context instead of props when directly nesting multiple components',
       function() {
-        const {tide} = this
         const Child = React.createClass({
           contextTypes: {
             tide: React.PropTypes.object
           },
 
           render() {
-            this.context.tide.should.equal(tide)
+            expect(this.context.tide).toBe(tideInstance)
             return null
           }
         })
 
-        const tree = React.createElement(TideComponent, {tide: this.tide},
+        const tree = React.createElement(TideComponent, {tide: tideInstance},
           React.createElement(TideComponent, {},
             React.createElement(Child)
           )
         )
-        return TestUtils.renderIntoDocument(tree)
+        TestUtils.renderIntoDocument(tree)
       }
     )
   })
@@ -73,8 +71,8 @@ describe('TideComponent', function() {
   describe('Props', function() {
     it('passes down the data of the given key paths as props to the child', function() {
       const Child = createComponent(function() {
-        this.props.foo.should.equal('foo')
-        return this.props.bar.should.equal('bar')
+        expect(this.props.foo).toEqual('foo')
+        expect(this.props.bar).toEqual('bar')
       })
 
       const state = Immutable.fromJS({
@@ -84,132 +82,130 @@ describe('TideComponent', function() {
         }
       })
 
-      this.tide.setState(state)
+      tideInstance.setState(state)
       const tree = React.createElement(TideComponent, {
-        tide: this.tide,
+        tide: tideInstance,
         foo: ['nested', 'foo'],
         bar: ['nested', 'bar']
       }, Child)
 
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
 
     it('accepts dot notation instead of an array for key paths', function() {
       const Child = createComponent(function() {
-        return this.props.foo.should.equal('foo')
+        expect(this.props.foo).toEqual('foo')
       })
 
-      const state = Immutable.fromJS({nested: {foo: 'foo'
-    }})
+      const state = Immutable.fromJS({nested: {foo: 'foo'}})
 
-      this.tide.setState(state)
+      tideInstance.setState(state)
       const tree = React.createElement(TideComponent, {
-        tide: this.tide,
+        tide: tideInstance,
         foo: 'nested.foo'
       }, Child)
 
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
 
     it('accepts setting key path to true to have it mirror the prop name', function() {
       const Child = createComponent(function() {
-        return this.props.foo.should.equal('foo')
+        expect(this.props.foo).toEqual('foo')
       })
 
       const state = Immutable.fromJS({foo: 'foo'})
 
-      this.tide.setState(state)
+      tideInstance.setState(state)
       const tree = React.createElement(TideComponent, {
-        tide: this.tide,
+        tide: tideInstance,
         foo: true
       }, Child)
 
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
 
     it('accepts functions to create keypaths based on the current state', function() {
       const Child = createComponent(function() {
-        return this.props.fooPointer.should.equal('foo')
+        expect(this.props.fooPointer).toEqual('foo')
       })
 
       const state = Immutable.fromJS({foo: 'foo', path: 'foo'})
 
-      this.tide.setState(state)
+      tideInstance.setState(state)
       const tree = React.createElement(TideComponent, {
-        tide: this.tide,
+        tide: tideInstance,
         fooPointer(state) { return [state.get('path')] }
       }, Child)
 
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
 
     it('converts to native JS object if \'toJS()\' is given in key path', function() {
       const Child = createComponent(function() {
-        return this.props.nested.should.deep.equal({foo: 'foo'})
+        expect(this.props.nested).toEqual({foo: 'foo'})
       })
 
-      const state = Immutable.fromJS({nested: {foo: 'foo'
-    }})
+      const state = Immutable.fromJS({nested: {foo: 'foo'}})
 
-      this.tide.setState(state)
+      tideInstance.setState(state)
       const tree = React.createElement(TideComponent, {
-        tide: this.tide,
+        tide: tideInstance,
         nested: 'nested.toJS()'
       }, Child)
 
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
 
     it('passes down props to multiple children', function() {
       const Child = createComponent(function() {
-        return this.props.foo.should.equal('foo')
+        expect(this.props.foo).toEqual('foo')
       })
 
-      this.tide.setState(Immutable.Map({foo: 'foo'}))
+      tideInstance.setState(Immutable.Map({foo: 'foo'}))
 
       const tree = React.createElement(TideComponent, {
-        tide: this.tide,
+        tide: tideInstance,
         foo: ['foo']
       }, Child, Child)
 
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
 
     it('passes down actions in the `tide` prop', function() {
-      this.tide.addActions('foo', Object)
-      const actions = this.tide.getActions('foo')
+      tideInstance.addActions('foo', Object)
+      const actions = tideInstance.getActions('foo')
 
       const Child = createComponent(function() {
-        return this.props.tide.actions.foo.should.equal(actions)
+        expect(this.props.tide.actions.foo).toEqual(actions)
       })
 
-      const tree = React.createElement(TideComponent, {tide: this.tide}, Child)
-      return TestUtils.renderIntoDocument(tree)
+      const tree = React.createElement(TideComponent, {tide: tideInstance}, Child)
+      TestUtils.renderIntoDocument(tree)
     })
 
     it('passes down keyPaths in the `tide` prop', function() {
       const Child = createComponent(function() {
-        return this.props.tide.keyPaths.foo.should.deep.equal(['nested', 'foo'])
+        expect(this.props.tide.keyPaths.foo).toEqual(['nested', 'foo'])
       })
 
-      this.tide.setState(Immutable.Map())
+      tideInstance.setState(Immutable.Map())
       const tree = React.createElement(
-        TideComponent, {tide: this.tide, foo: ['nested', 'foo']}, Child
+        TideComponent, {tide: tideInstance, foo: ['nested', 'foo']}, Child
       )
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
 
-    return it('doesn\'t pass props that are undefined', function() {
+    it('doesn\'t pass props that are undefined', function() {
       const Child = createComponent(function() {
-        return this.props.hasOwnProperty('foo').should.be.false
+        expect(this.props.hasOwnProperty('foo')).toBe(false)
       })
 
-      this.tide.setState(Immutable.Map())
+      tideInstance.setState(Immutable.Map())
       const tree = React.createElement(TideComponent, {
-        tide: this.tide,
+        tide: tideInstance,
         foo: ['non-existing-state-path']
       }, Child)
-      return TestUtils.renderIntoDocument(tree)
+      TestUtils.renderIntoDocument(tree)
     })
   })
 
@@ -217,28 +213,28 @@ describe('TideComponent', function() {
     it(
       're-renders when the data in any of the listened paths in the state has changed',
       function(done) {
-        const spy = Sinon.spy()
+        const spy = jest.fn()
         const Child = createComponent(spy)
-        this.tide.setState(Immutable.Map({foo: 'foo'}))
+        tideInstance.setState(Immutable.Map({foo: 'foo'}))
 
-        const tree = React.createElement(TideComponent, {tide: this.tide, foo: ['foo']}, Child)
-        TestUtils.renderIntoDocument(tree);
-        (spy.callCount).should.equal(1)
-        this.tide.updateState(state => state.set('foo', 'bar'))
+        const tree = React.createElement(TideComponent, {tide: tideInstance, foo: ['foo']}, Child)
+        TestUtils.renderIntoDocument(tree)
+        expect(spy).toHaveBeenCalledTimes(1)
+        tideInstance.updateState(state => state.set('foo', 'bar'))
         return setTimeout(function() {
-          (spy.callCount).should.equal(2)
+          expect(spy).toHaveBeenCalledTimes(2)
           done()
         }, 0)
       }
     )
 
     it('re-renders when a dynamic key path changes', function(done) {
-      const spy = Sinon.spy()
+      const spy = jest.fn()
       const Child = createComponent(function() {
         return spy(this.props.pointer)
       })
 
-      this.tide.setState(Immutable.Map({
+      tideInstance.setState(Immutable.Map({
         foo: 'foo',
         bar: 'bar',
         path: 'foo'
@@ -246,17 +242,17 @@ describe('TideComponent', function() {
       )
 
       const tree = React.createElement(TideComponent, {
-        tide: this.tide,
+        tide: tideInstance,
         pointer(state) { return [state.get('path')] }
       }, Child)
 
-      TestUtils.renderIntoDocument(tree);
-      (spy.callCount).should.equal(1)
-      spy.should.have.been.calledWith('foo')
-      this.tide.updateState(state => state.set('path', 'bar'))
+      TestUtils.renderIntoDocument(tree)
+      expect(spy).toHaveBeenCalledTimes(1)
+      expect(spy).toHaveBeenCalledWith('foo')
+      tideInstance.updateState(state => state.set('path', 'bar'))
       return setTimeout(function() {
-        (spy.callCount).should.equal(2)
-        spy.should.have.been.calledWith('bar')
+        expect(spy).toHaveBeenCalledTimes(2)
+        expect(spy).toHaveBeenCalledWith('bar')
         done()
       }, 0)
     })
@@ -264,23 +260,22 @@ describe('TideComponent', function() {
     it(
       'does not re-render if none of the listened to data has changed on an update',
       function(done) {
-        const spy = Sinon.spy()
+        const spy = jest.fn()
         const Child = createComponent(spy)
-        this.tide.setState(Immutable.Map({foo: 'foo', bar: 'bar'}))
+        tideInstance.setState(Immutable.Map({foo: 'foo', bar: 'bar'}))
 
-        const tree = React.createElement(TideComponent, {tide: this.tide, foo: ['foo']}, Child)
-        TestUtils.renderIntoDocument(tree);
-        (spy.callCount).should.equal(1)
+        const tree = React.createElement(TideComponent, {tide: tideInstance, foo: ['foo']}, Child)
+        TestUtils.renderIntoDocument(tree)
+        expect(spy).toHaveBeenCalledTimes(1)
         setTimeout(function() {
-          (spy.callCount).should.equal(1)
+          expect(spy).toHaveBeenCalledTimes(1)
           done()
         }, 0)
       }
     )
 
     it('does not re-render if something outside of the listened state updates', function(done) {
-      const {tide} = this
-      const childRenderSpy = Sinon.spy()
+      const childRenderSpy = jest.fn()
 
       const Child = React.createClass({
         render() {
@@ -301,22 +296,21 @@ describe('TideComponent', function() {
 
         render() {
           const child = React.createElement(Child, this.state)
-          return React.createElement(TideComponent, {tide}, child)
+          return React.createElement(TideComponent, {tide: tideInstance}, child)
         }
       })
 
       TestUtils.renderIntoDocument(React.createElement(Parent))
 
-      childRenderSpy.callCount.should.equal(1)
+      expect(childRenderSpy).toHaveBeenCalledTimes(1)
       parentSetState({foo: 'bar'}, () => {
-        childRenderSpy.callCount.should.equal(2)
+        expect(childRenderSpy).toHaveBeenCalledTimes(2)
         done()
       })
     })
 
-    return it('always re-renders if given the `impure` property', function() {
-      const {tide} = this
-      const spy = Sinon.spy()
+    it('always re-renders if given the `impure` property', function(done) {
+      const spy = jest.fn()
       const Child = createComponent(spy)
 
       let parentSetState = null
@@ -330,13 +324,17 @@ describe('TideComponent', function() {
         },
 
         render() {
-          return React.createElement(TideComponent, {tide, impure: true}, Child)
+          return React.createElement(TideComponent, {tide: tideInstance, impure: true}, Child)
         }
       })
 
+      expect(spy).toHaveBeenCalledTimes(0)
       TestUtils.renderIntoDocument(React.createElement(Parent))
-
-      return (() => spy.callCount).should.increase.when(() => parentSetState({foo: 'bar'}))
+      expect(spy).toHaveBeenCalledTimes(1)
+      parentSetState({foo: 'bar'}, () => {
+        expect(spy).toHaveBeenCalledTimes(2)
+        done()
+      })
     })
   })
 })

@@ -1,7 +1,5 @@
 /* eslint-disable no-console */
-import Sinon from 'sinon'
 import Immutable from 'immutable'
-
 import Tide from 'base'
 import Actions from 'actions'
 
@@ -14,9 +12,9 @@ describe('Tide', () => {
 
   describe('#enableLogging', () => {
     it('logs action calls when `actions` is true', () => {
-      const sandbox = Sinon.sandbox.create()
-      sandbox.stub(console, 'log')
-      const spy = Sinon.spy()
+      const logStub = jest.fn()
+      console.log = logStub
+      const spy = jest.fn()
       class FooActions extends Actions {
         static initClass() {
           this.prototype.bar = spy
@@ -28,15 +26,17 @@ describe('Tide', () => {
       tideInstance.enableLogging({actions: true})
 
       tideInstance.getActions('foo').bar('hello', 'world')
-      console.log.should.have.been.calledWith(
+      expect(logStub).toHaveBeenCalledWith(
         '%cAction performed', 'font-weight: bold;', 'foo.bar', 'hello', 'world'
       )
-      spy.should.have.been.calledWith('hello', 'world')
-      return sandbox.restore()
+      expect(spy).toHaveBeenCalledWith('hello', 'world')
     })
 
     it('doesn\'t automatically bind the instance to action methods', () => {
-      const spy = Sinon.spy()
+      const spy = jest.fn(function() {
+        expect(this.name).toBe('nodejs')
+        expect(this.name).not.toBe('FooActions')
+      })
 
       class FooActions extends Actions {
         static initClass() {
@@ -48,12 +48,9 @@ describe('Tide', () => {
         }
       }
       FooActions.initClass()
-
       tideInstance.addActions('foo', FooActions)
       tideInstance.enableLogging({actions: true})
-
       tideInstance.getActions('foo').barCaller()
-      return spy.should.not.have.been.calledOn(tideInstance.getActions('foo'))
     })
 
     it('still returns values from wrapped actions', () => {
@@ -64,45 +61,42 @@ describe('Tide', () => {
       tideInstance.addActions('foo', FooActions)
       tideInstance.enableLogging({actions: true})
 
-      tideInstance.getActions('foo').bar().should.equal('baz')
+      expect(tideInstance.getActions('foo').bar()).toEqual('baz')
     })
 
-    return it('logs state updates when `state` is true', () => {
-      const sandbox = Sinon.sandbox.create()
-      sandbox.stub(console, 'group')
-      sandbox.stub(console, 'log')
-      sandbox.stub(console, 'groupEnd')
+    it('logs state updates when `state` is true', () => {
+      console.group = jest.fn()
+      console.log = jest.fn()
+      console.groupEnd = jest.fn()
 
       tideInstance.setState(Immutable.Map({foo: 'baz'}))
       tideInstance.enableLogging({state: true})
       tideInstance.setState(Immutable.Map({foo: 'bar'}))
 
-      console.group.should.have.been.calledWith('%cState mutation', 'font-weight: bold;')
-      console.log.should.have.been.calledWith(
+      expect(console.group).toHaveBeenCalledWith('%cState mutation', 'font-weight: bold;')
+      expect(console.log).toHaveBeenCalledWith(
         '%cCurrent state', 'color: gray; font-weight: bold; %O', {foo: 'baz'}
       )
-      console.log.should.have.been.calledWith(
+      expect(console.log).toHaveBeenCalledWith(
         '%cOperation', 'font-weight: bold;', 'replace', '/foo', 'bar'
       )
-      console.log.should.have.been.calledWith(
+      expect(console.log).toHaveBeenCalledWith(
         '%cNext state', 'color: green; font-weight: bold; %O', {foo: 'bar'}
       )
-      console.groupEnd.should.have.been.calledWith()
-
-      return sandbox.restore()
+      expect(console.groupEnd).toHaveBeenCalledWith()
     })
   })
 
   describe('#getActions', () => {
     it('gets a specific actions instance when given a name', () => {
       tideInstance.addActions('foo', Object)
-      tideInstance.getActions('foo').should.exist
+      expect(tideInstance.getActions('foo')).toBeTruthy()
     })
 
-    return it('returns all actions when name is left empty', () => {
+    it('returns all actions when name is left empty', () => {
       tideInstance.addActions('foo', Object)
       tideInstance.addActions('bar', Object)
-      tideInstance.getActions().should.have.keys(['foo', 'bar'])
+      expect(Object.keys(tideInstance.getActions())).toEqual(['foo', 'bar'])
     })
   })
 
@@ -110,13 +104,13 @@ describe('Tide', () => {
     it('updates the state returned by getState', () => {
       const state = {foo: 'bar'}
       tideInstance.setState(state)
-      tideInstance.getState().should.equal(state)
+      expect(tideInstance.getState()).toEqual(state)
     })
 
     it('emits a change event asynchronously', (done) => {
       let isAsync = false
       tideInstance.onChange(() => {
-        isAsync.should.be.true
+        expect(isAsync).toBe(true)
         done()
       })
 
@@ -124,10 +118,10 @@ describe('Tide', () => {
       isAsync = true
     })
 
-    return it('emits a change event synchronously when given {immediate: true}', (done) => {
+    it('emits a change event synchronously when given {immediate: true}', (done) => {
       let isAsync = false
       tideInstance.onChange(() => {
-        isAsync.should.be.false
+        expect(isAsync).toBe(false)
         done()
       })
 
@@ -139,107 +133,102 @@ describe('Tide', () => {
   describe('#updateState', () => {
     it('calls the given updater with the state as the first argument', () => {
       tideInstance.setState({foo: 'bar'})
-      const updater = Sinon.stub().returns(tideInstance.getState())
+      const updater = jest.fn(() => tideInstance.getState())
       tideInstance.updateState(updater)
-      updater.should.have.been.calledWith(tideInstance.getState())
+      expect(updater).toHaveBeenCalledWith(tideInstance.getState())
     })
 
     it('sets the state from the return value of the updater', () => {
       tideInstance.updateState(() => 'foobar')
-      tideInstance.getState().should.equal('foobar')
+      expect(tideInstance.getState()).toEqual('foobar')
     })
 
-    return it('calls setState with the given options', () => {
+    it('calls setState with the given options', () => {
       const options = {foo: 'bar'}
-      Sinon.spy(tideInstance, 'setState')
+      tideInstance.setState = jest.fn()
       tideInstance.updateState(() => 'foobar', options)
-      tideInstance.setState.should.have.been.calledWith('foobar', options)
-      tideInstance.setState.restore()
+      expect(tideInstance.setState).toHaveBeenCalledWith('foobar', options)
     })
   })
 
   describe('#addActions', () => {
     it('instantiates the given class with the tide instance as the first argument', () => {
-      const spy = Sinon.spy(() => { console.log('cal1') })
+      const spy = jest.fn()
       class DummyClass {
         constructor() {
           spy(...arguments)
         }
       }
       tideInstance.addActions('dummy', DummyClass)
-      spy.should.have.been.calledWith(tideInstance)
+      expect(spy).toHaveBeenCalledWith(tideInstance)
     })
   })
 
   describe('#mutate', () => {
     beforeEach(() => {
-      tideInstance.setState(Immutable.fromJS({foo: {bar: 'baz'
-    }}))
+      tideInstance.setState(Immutable.fromJS({foo: {bar: 'baz'}}))
     })
 
     it('mutates the given path to the supplied value', () => {
       tideInstance.mutate(['foo', 'bar'], 'xyz')
-      tideInstance.getState().getIn(['foo', 'bar']).should.equal('xyz')
+      expect(tideInstance.getState().getIn(['foo', 'bar'])).toEqual('xyz')
     })
 
     it('mutates the given stringified path to the supplied value', () => {
       tideInstance.mutate('foo.bar', 'xyz')
-      tideInstance.getState().getIn(['foo', 'bar']).should.equal('xyz')
+      expect(tideInstance.getState().getIn(['foo', 'bar'])).toEqual('xyz')
     })
 
     it('mutates the given path with the result of the mutator', () => {
       tideInstance.mutate(['foo', 'bar'], existing => existing.toUpperCase())
-      tideInstance.getState().getIn(['foo', 'bar']).should.equal('BAZ')
+      expect(tideInstance.getState().getIn(['foo', 'bar'])).toEqual('BAZ')
     })
 
-    return it('calls setState with the given options', () => {
+    it('calls setState with the given options', () => {
       const options = {foo: 'bar'}
-      Sinon.spy(tideInstance, 'setState')
+      tideInstance.setState = jest.fn()
       tideInstance.mutate(['foo', 'bar'], 'xyz', options)
-      tideInstance.setState.should.have.been.calledWith(Sinon.match.any, options)
-      tideInstance.setState.restore()
+      expect(tideInstance.setState.mock.calls[0][1]).toEqual(options)
     })
   })
 
   describe('#get', () => {
     it('allows you to get a value in state', () => {
       tideInstance.setState(Immutable.fromJS({foo: 'bar'}))
-      tideInstance.get('foo').should.equal('bar')
+      expect(tideInstance.get('foo')).toEqual('bar')
     })
 
     it('allows you to get a path in state', () => {
-      tideInstance.setState(Immutable.fromJS({foo: {bar: 'baz'
-    }}))
-      tideInstance.get(['foo', 'bar']).should.equal('baz')
+      tideInstance.setState(Immutable.fromJS({foo: {bar: 'baz'}}))
+      expect(tideInstance.get(['foo', 'bar'])).toEqual('baz')
     })
 
-    return it('allows you to get a nested value in state via dot notation', () => {
-      tideInstance.setState(Immutable.fromJS({foo: {bar: 'baz'
-    }}))
-      tideInstance.get('foo.bar').should.equal('baz')
+    it('allows you to get a nested value in state via dot notation', () => {
+      tideInstance.setState(Immutable.fromJS({foo: {bar: 'baz'}}))
+      expect(tideInstance.get('foo.bar')).toEqual('baz')
     })
   })
 
   describe('#onChange', () =>
     it('registers a listener to the change event', (done) => {
-      const callback = Sinon.spy()
-      tideInstance.onChange(callback);
-      (callback.callCount).should.equal(0)
+      const callback = jest.fn()
+      tideInstance.onChange(callback)
+      expect(callback).toHaveBeenCalledTimes(0)
       tideInstance.emitChange()
-      return setTimeout(() => {
-        (callback.callCount).should.equal(1)
+      setTimeout(() => {
+        expect(callback).toHaveBeenCalledTimes(1)
         done()
       }, 0)
     })
   )
 
-  return describe('#offChange', () =>
+  describe('#offChange', () =>
     it('unregisters the given listener from the change event', (done) => {
-      const callback = Sinon.spy()
+      const callback = jest.fn()
       tideInstance.onChange(callback)
       tideInstance.offChange(callback)
       setTimeout(() => {
-        callback.callCount.should.equal(0)
+        expect(callback).toHaveBeenCalledTimes(0)
         done()
       }, 0)
     })

@@ -43,6 +43,7 @@
     "document": true,
     "expect": true,
     "it": true,
+    "jest": true,
     "window": true
   },
   "rules": {

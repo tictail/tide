@@ -1,16 +1,16 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react'
-import Sinon from 'sinon'
 import Immutable from 'immutable'
-import assign from 'lodash.assign'
 import TestUtils from 'react-addons-test-utils'
 
 import Tide from 'base'
 import wrap from 'wrap'
 
+let tideInstance
+
 describe('wrap', function() {
   beforeEach(function() {
-    this.tideInstance = new Tide()
+    tideInstance = new Tide()
   })
 
   const createWrappedComponent = function(tideInstance, renderSpy, tideProps = {}) {
@@ -21,48 +21,48 @@ describe('wrap', function() {
       }
     })
 
-    return wrap(Child, assign({tide: tideInstance}, tideProps))
+    return wrap(Child, {tide: tideInstance, ...tideProps})
   }
 
   it('wraps the given component class with a tide component', function() {
-    const spy = Sinon.spy()
+    const spy = jest.fn()
 
-    const Wrapped = createWrappedComponent(this.tideInstance, function() {
+    const Wrapped = createWrappedComponent(tideInstance, function() {
       return spy(this.props.tide)
     })
 
     TestUtils.renderIntoDocument(React.createElement(Wrapped))
-    return spy.firstCall.args[0].should.exist
+    expect(spy.mock.calls[0][0]).toBeTruthy()
   })
 
   it('passes the given props to the tide component', function() {
-    this.tideInstance.setState(Immutable.Map({foo: 'bar'}))
-    const spy = Sinon.spy()
+    tideInstance.setState(Immutable.Map({foo: 'bar'}))
+    const spy = jest.fn()
 
-    const Wrapped = createWrappedComponent(this.tideInstance, function() {
+    const Wrapped = createWrappedComponent(tideInstance, function() {
       return spy(this.props.stateProp)
     }
     , {stateProp: 'foo'})
 
     TestUtils.renderIntoDocument(React.createElement(Wrapped))
-    return spy.firstCall.args[0].should.equal('bar')
+    expect(spy.mock.calls[0][0]).toBe('bar')
   })
 
   it('passes props given to the wrap component to the child', function() {
-    const spy = Sinon.spy()
+    const spy = jest.fn()
 
-    const Wrapped = createWrappedComponent(this.tideInstance, function() {
+    const Wrapped = createWrappedComponent(tideInstance, function() {
       return spy(this.props.childProp)
     })
 
     TestUtils.renderIntoDocument(React.createElement(Wrapped, {childProp: 'foo'}))
-    return spy.firstCall.args[0].should.equal('foo')
+    expect(spy.mock.calls[0][0]).toBe('foo')
   })
 
   it('re-renders the child when given new props', function() {
-    const spy = Sinon.spy()
+    const spy = jest.fn()
 
-    const Wrapped = createWrappedComponent(this.tideInstance, function() {
+    const Wrapped = createWrappedComponent(tideInstance, function() {
       return spy(this.props.childProp)
     })
 
@@ -83,15 +83,15 @@ describe('wrap', function() {
 
     TestUtils.renderIntoDocument(React.createElement(Parent))
 
-    spy.should.have.been.calledWith('foo')
+    expect(spy).toHaveBeenCalledWith('foo')
     parentSetState({childProp: 'bar'})
-    return spy.should.have.been.calledWith('bar')
+    expect(spy).toHaveBeenCalledWith('bar')
   })
 
-  it('does not re-render the child when given the same props', function() {
-    const spy = Sinon.spy()
+  it('does not re-render the child when given the same props', function(done) {
+    const spy = jest.fn()
 
-    const Wrapped = createWrappedComponent(this.tideInstance, function() {
+    const Wrapped = createWrappedComponent(tideInstance, function() {
       return spy(this.props.childProp)
     })
 
@@ -112,13 +112,17 @@ describe('wrap', function() {
 
     TestUtils.renderIntoDocument(React.createElement(Parent))
 
-    return (() => spy.callCount).should.not.increase.when(() => parentSetState({childProp: 'foo'}))
+    expect(spy).toHaveBeenCalledTimes(1)
+    parentSetState({childProp: 'foo'}, () => {
+      expect(spy).toHaveBeenCalledTimes(1)
+      done()
+    })
   })
 
-  return it('always re-renders when impure is true', function() {
-    const spy = Sinon.spy()
+  it('always re-renders when impure is true', function(done) {
+    const spy = jest.fn()
 
-    const Wrapped = createWrappedComponent(this.tideInstance, function() {
+    const Wrapped = createWrappedComponent(tideInstance, function() {
       return spy(this.props.childProp)
     }
     , {impure: true})
@@ -140,6 +144,10 @@ describe('wrap', function() {
 
     TestUtils.renderIntoDocument(React.createElement(Parent))
 
-    return (() => spy.callCount).should.increase.when(() => parentSetState({childProp: 'foo'}))
+    expect(spy).toHaveBeenCalledTimes(1)
+    parentSetState({childProp: 'foo'}, () => {
+      expect(spy).toHaveBeenCalledTimes(2)
+      done()
+    })
   })
 })
