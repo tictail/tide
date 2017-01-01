@@ -9,7 +9,6 @@ export default function(fn) {
 
 /* eslint-disable no-console */
 function logStateUpdate(currentState, nextState) {
-  console.info(currentState, nextState, '------')
   if (console.group) console.group('%cState mutation', 'font-weight: bold;')
 
   console.log('%cCurrent state', 'color: gray; font-weight: bold; %O', currentState.toJS())
