@@ -1,6 +1,10 @@
 import diff from 'immutablediff'
 
-export default function(fn) {
+export default function(tide) {
+  tide.addMiddleware(loggingMiddleware)
+}
+
+function loggingMiddleware(fn) {
   return function(...args) {
     logStateUpdate(...args)
     return fn(...args)
