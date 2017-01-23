@@ -15,9 +15,8 @@ clean:
 build: clean
 	./node_modules/.bin/babel src -d lib
 
-test: clean
-	webpack
-	mocha-phantomjs build/index.html
+test:
+	./node_modules/.bin/jest
 
 release: build
 	@./release.sh
