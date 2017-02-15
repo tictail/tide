@@ -1,4 +1,3 @@
-import isArray from 'lodash.isarray'
 import defer from 'lodash.defer'
 
 function getNextState(oldState, newState) { return newState }
@@ -33,13 +32,13 @@ class Base {
   }
 
   mutate(keyPath, value, options) {
-    const kp = isArray(keyPath) ? keyPath : keyPath.split('.')
+    const kp = Array.isArray(keyPath) ? keyPath : keyPath.split('.')
     const val = typeof value === 'function' ? value(this.getState().getIn(kp)) : value
     this.setState(this.getState().setIn(kp, val), options)
   }
 
   get(keyPath) {
-    const kp = isArray(keyPath) ? keyPath : keyPath.split('.')
+    const kp = Array.isArray(keyPath) ? keyPath : keyPath.split('.')
     return this.getState().getIn(kp)
   }
 
@@ -86,4 +85,4 @@ class Base {
   }
 }
 
-module.exports = Base
+export default Base

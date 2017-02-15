@@ -1,12 +1,11 @@
 import React from 'react'
 import shallowEqual from 'react-pure-render/shallowEqual'
-import assign from 'lodash.assign'
 
 import TideComponent from './component'
 
-module.exports = function(componentClass, initialTideProps = {}) {
+export default function(componentClass, initialTideProps = {}) {
   const isImpure = initialTideProps.impure
-  const tideProps = assign({}, initialTideProps, {impure: true})
+  const tideProps = {...initialTideProps, impure: true}
 
   return React.createClass({
     shouldComponentUpdate(nextProps) {

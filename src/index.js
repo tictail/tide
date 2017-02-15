@@ -1,6 +1,9 @@
-import Actions from './actions'
-import Base from './base'
-import Component from './component'
-import wrap from './wrap'
+import _actions from './actions'
+import _base from './base'
+import _component from './component'
+import _wrap from './wrap'
 
-module.exports = {Actions, Base, Component, wrap}
+export const Actions = _actions
+export const Base = _base
+export const Component = _component
+export const wrap = _wrap
