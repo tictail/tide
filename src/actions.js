@@ -1,7 +1,11 @@
 class Actions {
-  constructor(tide) {
+  constructor(tide, actions) {
     this.tide = tide
-    if (this.initialize) this.initialize()
+    tide.actions = actions
+    tide.getActions = function getActions(name) {
+      return name ? actions[name] : actions
+    }
+    tide.setComponentProp('actions', actions)
   }
 
   getState() {

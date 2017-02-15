@@ -42,17 +42,17 @@ class Base {
     return this.getState().getIn(kp)
   }
 
-  addActions(name, ActionsClass) {
-    this.actions[name] = new ActionsClass(this)
-  }
-
   addMiddleware(newMiddleware) {
     this.middleware = [...this.middleware, newMiddleware]
     this.middlewareFn = getMiddewareFn(this.middleware)
   }
 
-  getActions(name) {
-    return name ? this.actions[name] : {...this.actions}
+  setComponentProp(name, obj) {
+    this._componentProps[name] = obj
+  }
+
+  getComponentProps() {
+    return this._componentProps
   }
 
   onChange(handler) {

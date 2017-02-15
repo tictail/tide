@@ -1,20 +1,9 @@
 import React from 'react'
 import shallowEqual from 'react-pure-render/shallowEqual'
-import assign from 'lodash.assign'
-import isArray from 'lodash.isarray'
-import isFunction from 'lodash.isfunction'
 import mapValues from 'lodash.mapvalues'
 import omit from 'lodash.omit'
 
 import TideBase from './base'
-
-const displayName = 'TideComponent'
-const contextTypes = {tide: React.PropTypes.object}
-const childContextTypes = {tide: React.PropTypes.object}
-const propTypes = {
-  impure: React.PropTypes.bool,
-  tide: React.PropTypes.object,
-}
 
 const NOT_KEY_PATH_PROPS = [
   'children',
@@ -36,7 +25,7 @@ class Component extends React.Component {
     const keyPaths = this.getKeyPaths(props, tide)
     this._componentTide = {
       keyPaths,
-      actions: tide.getActions(),
+      ...tide.getComponentProps(),
     }
 
     this.state = this.getPropsFromKeyPaths(keyPaths, tide)
@@ -68,8 +57,8 @@ class Component extends React.Component {
   getKeyPaths(props, tide) {
     let keyPaths = omit(props, (value, key) => { return excludedProps[key] })
     keyPaths = mapValues(keyPaths, (val, key) => {
-      const value = isFunction(val) ? val(tide.getState()) : val
-      if (isArray(value)) return value
+      const value = typeof val === 'function' ? val(tide.getState()) : val
+      if (Array.isArray(value)) return value
       if (value === true) return [key]
       return value.split('.')
     })
@@ -93,7 +82,7 @@ class Component extends React.Component {
   }
 
   getChildProps() {
-    return assign(omit(this.state, (value) => value === undefined), {tide: this._componentTide})
+    return {...omit(this.state, (value) => value === undefined), tide: this._componentTide}
   }
 
   hasStaleState(newState) {
@@ -115,9 +104,19 @@ class Component extends React.Component {
   }
 }
 
-Component.displayName = displayName
-Component.propTypes = propTypes
+if (process.evn.NODE_ENV !== 'production') {
+  const displayName = 'TideComponent'
+  const propTypes = {
+    impure: React.PropTypes.bool,
+    tide: React.PropTypes.object,
+  }
+  Component.displayName = displayName
+  Component.propTypes = propTypes
+}
+
+const contextTypes = {tide: React.PropTypes.object}
+const childContextTypes = {tide: React.PropTypes.object}
 Component.contextTypes = contextTypes
 Component.childContextTypes = childContextTypes
 
-module.exports = Component
+export default Component
