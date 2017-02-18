@@ -8,7 +8,7 @@ function getMiddewareFn(middleware) {
     getNextState
 }
 
-class Base {
+export class Tide {
   constructor() {
     this.state = null
     this.actions = {}
@@ -84,5 +84,3 @@ class Base {
     }
   }
 }
-
-export default Base

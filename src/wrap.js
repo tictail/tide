@@ -3,20 +3,19 @@ import shallowEqual from 'react-pure-render/shallowEqual'
 
 import TideComponent from './component'
 
-export default function(componentClass, initialTideProps = {}) {
-  const isImpure = initialTideProps.impure
-  const tideProps = {...initialTideProps, impure: true}
-
-  return React.createClass({
+export function wrap(ComponentClass, {impure, ...tideProps} = {}) {
+  return class Wrapped extends React.Component {
     shouldComponentUpdate(nextProps) {
-      if (isImpure) return true
+      if (impure) return true
       return !shallowEqual(this.props, nextProps)
-    },
+    }
 
     render() {
-      return React.createElement(TideComponent, tideProps,
-        React.createElement(componentClass, this.props)
+      return (
+        <TideComponent {...tideProps}>
+          {(props) => <ComponentClass {...props} {...this.props} />}
+        </TideComponent>
       )
     }
-  })
+  }
 }

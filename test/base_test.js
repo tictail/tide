@@ -1,25 +1,12 @@
 /* eslint-disable no-console */
 import Immutable from 'immutable'
-import Tide from 'base'
+import {Tide} from 'base'
 
 let tideInstance
 
 describe('Tide', () => {
   beforeEach(() => {
     tideInstance = new Tide()
-  })
-
-  describe('#getActions', () => {
-    it('gets a specific actions instance when given a name', () => {
-      tideInstance.addActions('foo', Object)
-      expect(tideInstance.getActions('foo')).toBeTruthy()
-    })
-
-    it('returns all actions when name is left empty', () => {
-      tideInstance.addActions('foo', Object)
-      tideInstance.addActions('bar', Object)
-      expect(Object.keys(tideInstance.getActions())).toEqual(['foo', 'bar'])
-    })
   })
 
   describe('#setState', () => {
@@ -70,19 +57,6 @@ describe('Tide', () => {
       tideInstance.setState = jest.fn()
       tideInstance.updateState(() => 'foobar', options)
       expect(tideInstance.setState).toHaveBeenCalledWith('foobar', options)
-    })
-  })
-
-  describe('#addActions', () => {
-    it('instantiates the given class with the tide instance as the first argument', () => {
-      const spy = jest.fn()
-      class DummyClass {
-        constructor() {
-          spy(...arguments)
-        }
-      }
-      tideInstance.addActions('dummy', DummyClass)
-      expect(spy).toHaveBeenCalledWith(tideInstance)
     })
   })
 

@@ -1,4 +1,4 @@
-class Actions {
+export class Actions {
   constructor(tide, actions) {
     this.tide = tide
     tide.actions = actions
@@ -32,5 +32,3 @@ class Actions {
     return this.tide.getActions(name)
   }
 }
-
-module.exports = Actions

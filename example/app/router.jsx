@@ -43,7 +43,7 @@ export default {
     )
 
     const router = (
-      <TideComponent impure tide={tide}>
+      <TideComponent tide={tide}>
         <Router history={browserHistory} routes={routes}/>
       </TideComponent>
     )
