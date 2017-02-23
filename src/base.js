@@ -9,14 +9,14 @@ function getMiddewareFn(middleware) {
 }
 
 export class Tide {
-  constructor() {
-    this.state = null
-    this.actions = {}
-    this.changeHandlers = []
-    this.middleware = []
+  constructor({middleware = []} = {}) {
+    this.middleware = middleware
     this.middlewareFn = getMiddewareFn(this.middleware)
-    if (this.initialize) this.initialize()
   }
+
+  state = null
+  changeHandlers = []
+  _componentProps = {}
 
   getState() {
     return this.state
@@ -45,6 +45,13 @@ export class Tide {
   addMiddleware(newMiddleware) {
     this.middleware = [...this.middleware, newMiddleware]
     this.middlewareFn = getMiddewareFn(this.middleware)
+  }
+
+  addProp(name, prop) {
+    if (process.env.NODE_ENV !== 'production' && this[name]) {
+      throw new Error(`Naming conflict, ${name} is already defined`)
+    }
+    this[name] = prop
   }
 
   setComponentProp(name, obj) {

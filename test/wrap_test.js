@@ -3,8 +3,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-import Tide from 'base'
-import wrap from 'wrap'
+import {Tide} from 'base'
+import {wrap} from 'wrap'
 
 let tideInstance
 
@@ -13,13 +13,13 @@ describe('wrap', function() {
     tideInstance = new Tide()
   })
 
-  const createWrappedComponent = function(tideInstance, renderSpy, tideProps = {}) {
-    const Child = React.createClass({
+  function createWrappedComponent(tideInstance, renderSpy, tideProps = {}) {
+    class Child extends React.Component {
       render() {
         renderSpy && renderSpy.call(this)
         return null
       }
-    })
+    }
 
     return wrap(Child, {tide: tideInstance, ...tideProps})
   }
@@ -31,7 +31,7 @@ describe('wrap', function() {
       return spy(this.props.tide)
     })
 
-    TestUtils.renderIntoDocument(React.createElement(Wrapped))
+    TestUtils.renderIntoDocument(<Wrapped />)
     expect(spy.mock.calls[0][0]).toBeTruthy()
   })
 
@@ -44,7 +44,7 @@ describe('wrap', function() {
     }
     , {stateProp: 'foo'})
 
-    TestUtils.renderIntoDocument(React.createElement(Wrapped))
+    TestUtils.renderIntoDocument(<Wrapped />)
     expect(spy.mock.calls[0][0]).toBe('bar')
   })
 

@@ -1,11 +1,6 @@
 export class Actions {
-  constructor(tide, actions) {
+  constructor(tide) {
     this.tide = tide
-    tide.actions = actions
-    tide.getActions = function getActions(name) {
-      return name ? actions[name] : actions
-    }
-    tide.setComponentProp('actions', actions)
   }
 
   getState() {
@@ -31,4 +26,15 @@ export class Actions {
   getActions(name) {
     return this.tide.getActions(name)
   }
+}
+
+export function init(tide, actions) {
+  const initializedActions = Object.keys(actions).reduce((obj, key) => {
+    return {...obj, [key]: new actions[key](tide)}
+  }, {})
+  tide.addProp('actions', initializedActions)
+  tide.addProp('getActions', function getActions(name) {
+    return name ? initializedActions[name] : initializedActions
+  })
+  tide.setComponentProp('actions', tide.actions)
 }

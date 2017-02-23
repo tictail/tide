@@ -23,8 +23,8 @@ const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
 }, {})
 
 export class TideComponent extends React.Component {
-  constructor(props, context) {
-    super(props, context)
+  constructor(props) {
+    super(...arguments)
     const tide = this.getTide()
     const keyPaths = this.getKeyPaths(props, tide)
     this._componentTide = {

@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 import Immutable from 'immutable'
-import Tide from 'base'
-import Actions from 'actions'
+import {Tide} from 'base'
+import {Actions, init} from 'actions'
 import enableLogging from 'actionLogger'
 
 let tideInstance
 
-describe('ActionLogging', () => {
+describe('ActionLogger', () => {
   beforeEach(() => {
     tideInstance = new Tide()
     tideInstance.setState(Immutable.Map({foo: 'baz'}))
@@ -23,7 +23,7 @@ describe('ActionLogging', () => {
     }
     FooActions.initClass()
 
-    tideInstance.addActions('foo', FooActions)
+    init(tideInstance, {foo: FooActions})
     enableLogging(tideInstance)
 
     tideInstance.getActions('foo').bar('hello', 'world')
@@ -50,7 +50,7 @@ describe('ActionLogging', () => {
       }
     }
     FooActions.initClass()
-    tideInstance.addActions('foo', FooActions)
+    init(tideInstance, {foo: FooActions})
     enableLogging(tideInstance)
     tideInstance.getActions('foo').barCaller()
   })
@@ -59,7 +59,7 @@ describe('ActionLogging', () => {
     class FooActions extends Actions {
       bar() { return 'baz' }
     }
-    tideInstance.addActions('foo', FooActions)
+    init(tideInstance, {foo: FooActions})
     enableLogging(tideInstance)
     expect(tideInstance.getActions('foo').bar()).toEqual('baz')
   })

@@ -1,14 +1,14 @@
-import Utils from './utils'
+import {getInternalMethods} from './utils'
 import wrap from 'lodash.wrap'
 
 export default function enableLogging(tide) {
-  tide.actions.forEach(function(actions, actionsName) {
-    const methods = Object.keys(Utils.getInternalMethods(actions.constructor))
-
+  const actions = tide.getActions()
+  Object.keys(actions).forEach(function(key) {
+    const actionsClass = actions[key]
+    const methods = Object.keys(getInternalMethods(actionsClass.constructor))
     methods.forEach(function(method) {
-      actions[method] = wrap(actions[method], function(func) {
-        const callArgs = Array.prototype.slice.call(arguments, 1)
-        logActionCall(actionsName, method, callArgs)
+      actionsClass[method] = wrap(actionsClass[method], function(func, ...callArgs) {
+        logActionCall(key, method, callArgs)
         return func.apply(this, callArgs)
       })
     })

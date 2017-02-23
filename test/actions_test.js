@@ -1,50 +1,85 @@
+import React from 'react'
+import TestUtils from 'react-addons-test-utils'
 import {Tide} from 'base'
+import {TideComponent} from 'component'
+import {Actions, init} from 'actions'
 
 let tideInstance
+
+class TestAction extends Actions {}
 
 describe('Actions', () => {
   beforeEach(() => {
     tideInstance = new Tide()
   })
 
-  describe('#getActions', () => {
+  describe('#init', () => {
+    it('initializes all actions', () => {
+      expect.assertions(2)
+      const spy = jest.fn()
+      class One extends Actions {
+        constructor() {
+          super(...arguments)
+          spy('one')
+        }
+      }
+
+      class Two extends Actions {
+        constructor() {
+          super(...arguments)
+          spy('two')
+        }
+      }
+      init(tideInstance, {
+        one: One,
+        two: Two,
+      })
+      expect(spy).toHaveBeenCalledWith('one')
+      expect(spy).toHaveBeenCalledWith('two')
+    })
+  })
+
+  describe('#tide.getActions', () => {
     it('gets a specific actions instance when given a name', () => {
-      tideInstance.addActions('foo', Object)
-      expect(tideInstance.getActions('foo')).toBeTruthy()
+      expect.assertions(1)
+      init(tideInstance, {foo: TestAction})
+      expect(tideInstance.getActions('foo') instanceof TestAction).toBe(true)
     })
 
     it('returns all actions when name is left empty', () => {
-      tideInstance.addActions('foo', Object)
-      tideInstance.addActions('bar', Object)
+      expect.assertions(1)
+      init(tideInstance, {foo: TestAction, bar: TestAction})
       expect(Object.keys(tideInstance.getActions())).toEqual(['foo', 'bar'])
     })
   })
 
-  describe('#addActions', () => {
-    it('instantiates the given class with the tide instance as the first argument', () => {
-      const spy = jest.fn()
-      class DummyClass {
-        constructor() {
-          spy(...arguments)
-        }
-      }
-      tideInstance.addActions('dummy', DummyClass)
-      expect(spy).toHaveBeenCalledWith(tideInstance)
-    })
-  })
-})
-
-describe('component', () => {
-  it('passes down actions in the `tide` prop', function() {
-    tideInstance.addActions('foo', Object)
-    const actions = tideInstance.getActions('foo')
-
-    const Child = createComponent(function() {
-      expect(this.props.tide.actions.foo).toEqual(actions)
+  describe('#getActions', () => {
+    it('gets a specific actions instance when given a name', () => {
+      expect.assertions(1)
+      init(tideInstance, {foo: TestAction, bar: TestAction})
+      expect(tideInstance.getActions('foo').getActions('bar') instanceof TestAction).toBe(true)
     })
 
-    const tree = React.createElement(TideComponent, {tide: tideInstance}, Child)
-    TestUtils.renderIntoDocument(tree)
+    it('returns all actions when name is left empty', () => {
+      expect.assertions(1)
+      init(tideInstance, {foo: TestAction, bar: TestAction})
+      expect(Object.keys(tideInstance.getActions('foo').getActions())).toEqual(['foo', 'bar'])
+    })
   })
 
+  describe('#component', () => {
+    it('passes down actions in the `tide` prop', function() {
+      expect.assertions(1)
+      init(tideInstance, {foo: TestAction})
+
+      TestUtils.renderIntoDocument(
+        <TideComponent tide={tideInstance}>
+          {({tide}) => {
+            expect(tide.actions.foo instanceof TestAction).toBe(true)
+            return null
+          }}
+        </TideComponent>
+      )
+    })
+  })
 })
