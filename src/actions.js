@@ -36,5 +36,5 @@ export function initActions(tide, actions) {
   tide.addProp('getActions', function getActions(name) {
     return name ? initializedActions[name] : initializedActions
   })
-  tide.setComponentProp('actions', tide.actions)
+  tide.addComponentProp('actions', tide.actions)
 }

@@ -54,7 +54,10 @@ export class Tide {
     this[name] = prop
   }
 
-  setComponentProp(name, obj) {
+  addComponentProp(name, obj) {
+    if (process.env.NODE_ENV !== 'production' && this._componentProps[name]) {
+      throw new Error(`Naming conflict, ${name} is already defined`)
+    }
     this._componentProps[name] = obj
   }
 
