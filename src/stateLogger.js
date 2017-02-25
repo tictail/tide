@@ -1,10 +1,6 @@
 import diff from 'immutablediff'
 
-export default function(tide) {
-  tide.addMiddleware(loggingMiddleware)
-}
-
-function loggingMiddleware(fn) {
+export default function loggingMiddleware(fn) {
   return function(...args) {
     logStateUpdate(...args)
     return fn(...args)
@@ -13,8 +9,7 @@ function loggingMiddleware(fn) {
 
 /* eslint-disable no-console */
 function logStateUpdate(currentState, nextState) {
-  if (console.group) console.group('%cState mutation', 'font-weight: bold;')
-
+  if (console.group) { console.group('%cState mutation', 'font-weight: bold;') }
   console.log('%cCurrent state', 'color: gray; font-weight: bold; %O', currentState.toJS())
   const operations = diff(currentState, nextState)
   if (operations.size > 1) {

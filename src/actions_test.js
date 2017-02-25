@@ -1,4 +1,5 @@
 import React from 'react'
+import {fromJS} from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 import {Tide} from 'base'
 import {TideComponent} from 'component'
@@ -64,6 +65,86 @@ describe('Actions', () => {
       expect.assertions(1)
       init(tideInstance, {foo: TestAction, bar: TestAction})
       expect(Object.keys(tideInstance.getActions('foo').getActions())).toEqual(['foo', 'bar'])
+    })
+  })
+
+  describe('#proxy methods', () => {
+    it('getState', () => {
+      expect.assertions(1)
+      init(tideInstance, {foo: class Foo extends Actions {
+        test() {
+          return this.getState().getIn(['foo', 'bar'])
+        }
+      }})
+      tideInstance.setState(fromJS({foo: {bar: 'baz'}}))
+      expect(tideInstance.actions.foo.test()).toBe('baz')
+    })
+
+    it('get', () => {
+      expect.assertions(1)
+      init(tideInstance, {foo: class Foo extends Actions {
+        test() {
+          return this.get('foo.bar')
+        }
+      }})
+      tideInstance.setState(fromJS({foo: {bar: 'baz'}}))
+      expect(tideInstance.actions.foo.test()).toBe('baz')
+    })
+
+    it('getState', () => {
+      expect.assertions(1)
+      init(tideInstance, {foo: class Foo extends Actions {
+        test() {
+          return this.getState()
+        }
+      }})
+      tideInstance.setState(fromJS({foo: {bar: 'baz'}}))
+      expect(tideInstance.actions.foo.test().toJS()).toEqual({foo: {bar: 'baz'}})
+    })
+
+    it('mutate', () => {
+      expect.assertions(1)
+      init(tideInstance, {foo: class Foo extends Actions {
+        testSet(v) {
+          return this.mutate('foo.bar', v)
+        }
+        testGet() {
+          return this.get('foo.bar')
+        }
+      }})
+      tideInstance.setState(fromJS({foo: {bar: 'baz'}}))
+      tideInstance.actions.foo.testSet('hi')
+      expect(tideInstance.actions.foo.testGet()).toBe('hi')
+    })
+
+    it('setState', () => {
+      expect.assertions(1)
+      init(tideInstance, {foo: class Foo extends Actions {
+        testSet(v) {
+          return this.setState(v)
+        }
+        testGet() {
+          return this.get('foo')
+        }
+      }})
+      tideInstance.setState(fromJS({foo: {bar: 'baz'}}))
+      tideInstance.actions.foo.testSet(fromJS({foo: 'hi'}))
+      expect(tideInstance.actions.foo.testGet()).toBe('hi')
+    })
+
+    it('updateState', () => {
+      expect.assertions(1)
+      init(tideInstance, {foo: class Foo extends Actions {
+        testSet(v) {
+          return this.updateState((s) => s.setIn(['foo'], v))
+        }
+        testGet() {
+          return this.get('foo')
+        }
+      }})
+      tideInstance.setState(fromJS({foo: {bar: 'baz'}}))
+      tideInstance.actions.foo.testSet('hi')
+      expect(tideInstance.actions.foo.testGet()).toBe('hi')
     })
   })
 
