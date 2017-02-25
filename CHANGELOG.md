@@ -1,3 +1,13 @@
+### 2.0.0-alpha1 XXXX-XX-XX
+* Major internal re-write to improve modularity and enable extensions.
+* Breaking: `Base` is renamed to `Tide`
+* Breaking: Changed the API for adding actions: `Tide.addActions` is remove in favor of `initActions`
+* Breaking: Changed api for logging. Logging is now separated into different and need to be enabled one by one.
+* New feature: `Tide.addMiddleWare`, a hook to add middleware that intercepts state changes.
+* New feature: `Tide.addProp`, a hook to safely monkey patch props onto a tide instance.
+* New feature: `Tide.addComponentProp`, a hook to add properties to the props of `TideComponent`.
+* [Upgrade guide](TODO)
+
 ### 1.2.1 2016-11-23
 * Fix breaking bug introduced in 1.2.0 when trying to access `tide` from context in `TideComponent`
 * Fix breaking bug when trying to directly nest multiple `TideComponent`s
