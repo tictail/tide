@@ -1,34 +1,32 @@
 import React from 'react'
 import classNames from 'classnames'
 
-export default React.createClass({
-  getInitialState() {
-    return {
-      editing: false,
-      lastTitle: null,
-    }
-  },
+export default class extends React.Component {
+  state = {
+    editing: false,
+    lastTitle: null,
+  };
 
-  onToggleCompleted(e) {
+  onToggleCompleted = (e) => {
     this.props.tide.actions.todo.toggleCompleted(
       this.props.tide.keyPaths.todo
     )
-  },
+  };
 
-  onDestroy() {
+  onDestroy = () => {
     this.props.tide.actions.todo.destroy(
       this.props.tide.keyPaths.todo
     )
-  },
+  };
 
-  onChangeTitle(e) {
+  onChangeTitle = (e) => {
     this.props.tide.actions.todo.changeTitle(
       this.props.tide.keyPaths.todo,
       e.target.value
     )
-  },
+  };
 
-  onTitleKeyDown(e) {
+  onTitleKeyDown = (e) => {
     if (['Enter', 'Escape'].indexOf(e.key) !== - 1) {
       this.refs.titleInput.blur()
       if (e.key === 'Escape') {
@@ -38,13 +36,13 @@ export default React.createClass({
         )
       }
     }
-  },
+  };
 
-  onTitleBlur() {
+  onTitleBlur = () => {
     this.setState({editing: false})
-  },
+  };
 
-  onStartEditing() {
+  onStartEditing = () => {
     this.setState({
       editing: true,
       lastTitle: this.props.todo.get('title')
@@ -53,7 +51,7 @@ export default React.createClass({
       node.focus()
       node.setSelectionRange(node.value.length, node.value.length)
     })
-  },
+  };
 
   render() {
     const {todo} = this.props
@@ -87,4 +85,4 @@ export default React.createClass({
       </li>
     )
   }
-})
+}

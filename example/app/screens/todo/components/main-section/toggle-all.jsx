@@ -1,10 +1,10 @@
 import React from 'react'
 import {wrap} from 'tide'
 
-const ToggleAll = React.createClass({
-  onChange() {
+class ToggleAll extends React.Component {
+  onChange = () => {
     this.props.tide.actions.todo.toggleAllCompleted()
-  },
+  };
 
   render() {
     const all = this.props.todos.every((todo) => todo.get('completed'))
@@ -22,6 +22,6 @@ const ToggleAll = React.createClass({
       </span>
     )
   }
-})
+}
 
 export default wrap(ToggleAll, {todos: "todos"})

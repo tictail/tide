@@ -1,22 +1,22 @@
 import React from 'react'
 import {wrap} from 'tide'
 
-const TodoInput = React.createClass({
-  onChange(e) {
+class TodoInput extends React.Component {
+  onChange = (e) => {
     // We can access all the registered actions through the `this.props.tide.actions' object.
     this.props.tide.actions.todo.setTodoInputText(e.target.value)
-  },
+  }
 
-  onKeyPress(e) {
+  onKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.props.tide.actions.todo.addTodo()
     }
-  },
+  }
 
   render() {
     return (
       <input
-        className="new-todo"
+        className='new-todo'
         value={this.props.value}
         onChange={this.onChange}
         onKeyPress={this.onKeyPress}
@@ -25,7 +25,7 @@ const TodoInput = React.createClass({
       />
     )
   }
-})
+}
 
 // The `wrap` function wraps this component in a TideComponent, which gives us access to
 // our actions and values from the global state. Here we set the "todoInputText"
