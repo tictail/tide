@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import Immutable from 'immutable'
-import Tide from 'base'
+import {Tide} from 'base'
 import enableLogging from 'stateLogger'
 
 let tideInstance
@@ -12,7 +12,7 @@ describe('stateLogger', () => {
     enableLogging(tideInstance)
   })
 
-  it('logs state updates when `state` is true', () => {
+  it('logs state updates', () => {
     console.group = jest.fn()
     console.log = jest.fn()
     console.groupEnd = jest.fn()
