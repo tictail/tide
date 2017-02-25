@@ -1,7 +1,7 @@
 import React from 'react'
 import shallowEqual from 'react-pure-render/shallowEqual'
 
-import {TideComponent} from './component'
+import {Component as TideComponent} from './component'
 
 export function wrap(ComponentClass, {impure, ...tideProps} = {}) {
   return class Wrapped extends React.Component {

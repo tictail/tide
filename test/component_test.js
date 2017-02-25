@@ -4,11 +4,11 @@ import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
 import {Tide} from 'base'
-import {TideComponent} from 'component'
+import {Component} from 'component'
 
 let tideInstance
 
-describe('TideComponent', function() {
+describe('Component', function() {
   beforeEach(function() {
     tideInstance = new Tide()
   })
@@ -35,9 +35,9 @@ describe('TideComponent', function() {
         }
       })
 
-      const tree = React.createElement(TideComponent, {tide: tideInstance},
+      const tree = React.createElement(Component, {tide: tideInstance},
         ({tide, ...props}) => React.createElement('div', props,
-          React.createElement(TideComponent, {},
+          React.createElement(Component, {},
             (props) => React.createElement(Child, props)
           )
         )
@@ -59,8 +59,8 @@ describe('TideComponent', function() {
           }
         })
 
-        const tree = React.createElement(TideComponent, {tide: tideInstance},
-          (props) => React.createElement(TideComponent, {},
+        const tree = React.createElement(Component, {tide: tideInstance},
+          (props) => React.createElement(Component, {},
             (props) => React.createElement(Child, props)
           )
         )
@@ -84,7 +84,7 @@ describe('TideComponent', function() {
       })
 
       tideInstance.setState(state)
-      const tree = React.createElement(TideComponent, {
+      const tree = React.createElement(Component, {
         tide: tideInstance,
         foo: ['nested', 'foo'],
         bar: ['nested', 'bar']
@@ -101,7 +101,7 @@ describe('TideComponent', function() {
       const state = Immutable.fromJS({nested: {foo: 'foo'}})
 
       tideInstance.setState(state)
-      const tree = React.createElement(TideComponent, {
+      const tree = React.createElement(Component, {
         tide: tideInstance,
         foo: 'nested.foo'
       }, Child)
@@ -117,7 +117,7 @@ describe('TideComponent', function() {
       const state = Immutable.fromJS({foo: 'foo'})
 
       tideInstance.setState(state)
-      const tree = React.createElement(TideComponent, {
+      const tree = React.createElement(Component, {
         tide: tideInstance,
         foo: true
       }, Child)
@@ -133,7 +133,7 @@ describe('TideComponent', function() {
       const state = Immutable.fromJS({foo: 'foo', path: 'foo'})
 
       tideInstance.setState(state)
-      const tree = React.createElement(TideComponent, {
+      const tree = React.createElement(Component, {
         tide: tideInstance,
         fooPointer(state) { return [state.get('path')] }
       }, Child)
@@ -149,7 +149,7 @@ describe('TideComponent', function() {
       const state = Immutable.fromJS({nested: {foo: 'foo'}})
 
       tideInstance.setState(state)
-      const tree = React.createElement(TideComponent, {
+      const tree = React.createElement(Component, {
         tide: tideInstance,
         nested: 'nested.toJS()'
       }, Child)
@@ -164,7 +164,7 @@ describe('TideComponent', function() {
 
       tideInstance.setState(Immutable.Map())
       const tree = React.createElement(
-        TideComponent, {tide: tideInstance, foo: ['nested', 'foo']}, Child
+        Component, {tide: tideInstance, foo: ['nested', 'foo']}, Child
       )
       TestUtils.renderIntoDocument(tree)
     })
@@ -175,7 +175,7 @@ describe('TideComponent', function() {
       })
 
       tideInstance.setState(Immutable.Map())
-      const tree = React.createElement(TideComponent, {
+      const tree = React.createElement(Component, {
         tide: tideInstance,
         foo: ['non-existing-state-path']
       }, Child)
@@ -191,7 +191,7 @@ describe('TideComponent', function() {
         const Child = createComponent(spy)
         tideInstance.setState(Immutable.Map({foo: 'foo'}))
 
-        const tree = React.createElement(TideComponent, {tide: tideInstance, foo: ['foo']}, Child)
+        const tree = React.createElement(Component, {tide: tideInstance, foo: ['foo']}, Child)
         TestUtils.renderIntoDocument(tree)
         expect(spy).toHaveBeenCalledTimes(1)
         tideInstance.updateState(state => state.set('foo', 'bar'))
@@ -215,7 +215,7 @@ describe('TideComponent', function() {
       })
       )
 
-      const tree = React.createElement(TideComponent, {
+      const tree = React.createElement(Component, {
         tide: tideInstance,
         pointer(state) { return [state.get('path')] }
       }, Child)
@@ -238,7 +238,7 @@ describe('TideComponent', function() {
         const Child = createComponent(spy)
         tideInstance.setState(Immutable.Map({foo: 'foo', bar: 'bar'}))
 
-        const tree = React.createElement(TideComponent, {tide: tideInstance, foo: ['foo']}, Child)
+        const tree = React.createElement(Component, {tide: tideInstance, foo: ['foo']}, Child)
         TestUtils.renderIntoDocument(tree)
         expect(spy).toHaveBeenCalledTimes(1)
         setTimeout(function() {
@@ -270,7 +270,7 @@ describe('TideComponent', function() {
 
         render() {
           const child = React.createElement(Child, this.state)
-          return React.createElement(TideComponent, {tide: tideInstance}, () => child)
+          return React.createElement(Component, {tide: tideInstance}, () => child)
         }
       })
 
@@ -299,7 +299,7 @@ describe('TideComponent', function() {
         },
 
         render() {
-          return React.createElement(TideComponent, {tide: tideInstance, impure: true}, Child)
+          return React.createElement(Component, {tide: tideInstance, impure: true}, Child)
         }
       })
 

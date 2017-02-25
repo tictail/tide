@@ -22,7 +22,7 @@ const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
   return val
 }, {})
 
-export class TideComponent extends React.Component {
+export class Component extends React.Component {
   constructor(props) {
     super(...arguments)
     const tide = this.getTide()
@@ -104,11 +104,11 @@ if (process.env.NODE_ENV !== 'production') {
   const propTypes = {
     tide: React.PropTypes.object,
   }
-  TideComponent.displayName = displayName
-  TideComponent.propTypes = propTypes
+  Component.displayName = displayName
+  Component.propTypes = propTypes
 }
 
 const contextTypes = {tide: React.PropTypes.object}
 const childContextTypes = {tide: React.PropTypes.object}
-TideComponent.contextTypes = contextTypes
-TideComponent.childContextTypes = childContextTypes
+Component.contextTypes = contextTypes
+Component.childContextTypes = childContextTypes

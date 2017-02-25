@@ -28,7 +28,7 @@ export class Actions {
   }
 }
 
-export function init(tide, actions) {
+export function initActions(tide, actions) {
   const initializedActions = Object.keys(actions).reduce((obj, key) => {
     return {...obj, [key]: new actions[key](tide)}
   }, {})

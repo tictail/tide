@@ -2,8 +2,8 @@ import React from 'react'
 import {fromJS} from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 import {Tide} from 'base'
-import {TideComponent} from 'component'
-import {Actions, init} from 'actions'
+import {Component as TideComponent} from 'component'
+import {Actions, initActions} from 'actions'
 
 let tideInstance
 
@@ -31,7 +31,7 @@ describe('Actions', () => {
           spy('two')
         }
       }
-      init(tideInstance, {
+      initActions(tideInstance, {
         one: One,
         two: Two,
       })
@@ -43,13 +43,13 @@ describe('Actions', () => {
   describe('#tide.getActions', () => {
     it('gets a specific actions instance when given a name', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: TestAction})
+      initActions(tideInstance, {foo: TestAction})
       expect(tideInstance.getActions('foo') instanceof TestAction).toBe(true)
     })
 
     it('returns all actions when name is left empty', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: TestAction, bar: TestAction})
+      initActions(tideInstance, {foo: TestAction, bar: TestAction})
       expect(Object.keys(tideInstance.getActions())).toEqual(['foo', 'bar'])
     })
   })
@@ -57,13 +57,13 @@ describe('Actions', () => {
   describe('#getActions', () => {
     it('gets a specific actions instance when given a name', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: TestAction, bar: TestAction})
+      initActions(tideInstance, {foo: TestAction, bar: TestAction})
       expect(tideInstance.getActions('foo').getActions('bar') instanceof TestAction).toBe(true)
     })
 
     it('returns all actions when name is left empty', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: TestAction, bar: TestAction})
+      initActions(tideInstance, {foo: TestAction, bar: TestAction})
       expect(Object.keys(tideInstance.getActions('foo').getActions())).toEqual(['foo', 'bar'])
     })
   })
@@ -71,7 +71,7 @@ describe('Actions', () => {
   describe('#proxy methods', () => {
     it('getState', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: class Foo extends Actions {
+      initActions(tideInstance, {foo: class Foo extends Actions {
         test() {
           return this.getState().getIn(['foo', 'bar'])
         }
@@ -82,7 +82,7 @@ describe('Actions', () => {
 
     it('get', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: class Foo extends Actions {
+      initActions(tideInstance, {foo: class Foo extends Actions {
         test() {
           return this.get('foo.bar')
         }
@@ -93,7 +93,7 @@ describe('Actions', () => {
 
     it('getState', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: class Foo extends Actions {
+      initActions(tideInstance, {foo: class Foo extends Actions {
         test() {
           return this.getState()
         }
@@ -104,7 +104,7 @@ describe('Actions', () => {
 
     it('mutate', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: class Foo extends Actions {
+      initActions(tideInstance, {foo: class Foo extends Actions {
         testSet(v) {
           return this.mutate('foo.bar', v)
         }
@@ -119,7 +119,7 @@ describe('Actions', () => {
 
     it('setState', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: class Foo extends Actions {
+      initActions(tideInstance, {foo: class Foo extends Actions {
         testSet(v) {
           return this.setState(v)
         }
@@ -134,7 +134,7 @@ describe('Actions', () => {
 
     it('updateState', () => {
       expect.assertions(1)
-      init(tideInstance, {foo: class Foo extends Actions {
+      initActions(tideInstance, {foo: class Foo extends Actions {
         testSet(v) {
           return this.updateState((s) => s.setIn(['foo'], v))
         }
@@ -151,12 +151,11 @@ describe('Actions', () => {
   describe('#component', () => {
     it('passes down actions in the `tide` prop', function() {
       expect.assertions(1)
-      init(tideInstance, {foo: TestAction})
-
+      initActions(tideInstance, {foo: TestAction})
       TestUtils.renderIntoDocument(
         <TideComponent tide={tideInstance}>
           {({tide}) => {
-            expect(tide.actions.foo instanceof TestAction).toBe(true)
+            expect(tide.actions.foo).toBeInstanceOf(TestAction)
             return null
           }}
         </TideComponent>
