@@ -155,7 +155,6 @@ describe('Actions', () => {
       TestUtils.renderIntoDocument(
         <TideComponent tide={tideInstance}>
           {({tide}) => {
-            console.log('TestActions', TestActions, tide.actions.foo)
             expect(tide.actions.foo).toBeInstanceOf(TestActions)
             return null
           }}

@@ -48,7 +48,6 @@ export default {
         {(props) => <Router history={browserHistory} routes={routes} {...props} />}
       </TideComponent>
     )
-    console.log(tide.getState(), '--')
     ReactDOM.render(router, document.getElementById('app'))
   }
 }
