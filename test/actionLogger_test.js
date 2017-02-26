@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import Immutable from 'immutable'
-import {Tide} from 'base'
-import {Actions, initActions} from 'actions'
+import Tide from 'base'
+import Actions, {initActions} from 'actions'
 import enableLogging from 'actionLogger'
 
 let tideInstance

@@ -1,7 +1,7 @@
 import React from 'react'
 import shallowEqual from 'react-pure-render/shallowEqual'
 import mapValues from 'lodash.mapvalues'
-import {Tide} from './base'
+import Tide from './base'
 
 const NOT_KEY_PATH_PROPS = [
   'children',
@@ -22,7 +22,7 @@ const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
   return val
 }, {})
 
-export class Component extends React.Component {
+export default class TideComponent extends React.Component {
   constructor(props) {
     super(...arguments)
     const tide = this.getTide()
@@ -104,11 +104,11 @@ if (process.env.NODE_ENV !== 'production') {
   const propTypes = {
     tide: React.PropTypes.object,
   }
-  Component.displayName = displayName
-  Component.propTypes = propTypes
+  TideComponent.displayName = displayName
+  TideComponent.propTypes = propTypes
 }
 
 const contextTypes = {tide: React.PropTypes.object}
 const childContextTypes = {tide: React.PropTypes.object}
-Component.contextTypes = contextTypes
-Component.childContextTypes = childContextTypes
+TideComponent.contextTypes = contextTypes
+TideComponent.childContextTypes = childContextTypes

@@ -3,8 +3,8 @@ import React from 'react'
 import Immutable from 'immutable'
 import TestUtils from 'react-addons-test-utils'
 
-import {Tide} from 'base'
-import {wrap} from 'wrap'
+import Tide from 'base'
+import wrap from 'wrap'
 
 let tideInstance
 

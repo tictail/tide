@@ -1,9 +1,9 @@
 import React from 'react'
 import shallowEqual from 'react-pure-render/shallowEqual'
 
-import {Component as TideComponent} from './component'
+import TideComponent from './component'
 
-export function wrap(ComponentClass, {impure, ...tideProps} = {}) {
+export default function wrap(ComponentClass, {impure, ...tideProps} = {}) {
   return class Wrapped extends React.Component {
     shouldComponentUpdate(nextProps) {
       if (impure) return true

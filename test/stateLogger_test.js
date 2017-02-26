@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import Immutable from 'immutable'
-import {Tide} from 'base'
+import Tide from 'base'
 import stateLogger from 'stateLogger'
 
 let tide

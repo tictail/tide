@@ -1,4 +1,4 @@
-export class Actions {
+export default class Actions {
   constructor(tide) {
     this.tide = tide
   }

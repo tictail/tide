@@ -8,7 +8,7 @@ function getMiddewareFn(middleware) {
     getNextState
 }
 
-export class Tide {
+export default class Tide {
   constructor({middleware = []} = {}) {
     this.middleware = middleware
     this.middlewareFn = getMiddewareFn(this.middleware)

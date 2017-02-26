@@ -3,8 +3,8 @@ import React from 'react'
 import TestUtils from 'react-addons-test-utils'
 import Immutable from 'immutable'
 
-import {Tide} from 'base'
-import {Component} from 'component'
+import Tide from 'base'
+import Component from 'component'
 
 let tideInstance
 

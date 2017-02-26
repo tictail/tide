@@ -1,4 +1,4 @@
-export * from './actions'
-export * from './base'
-export * from './component'
-export * from './wrap'
+export {default as Actions, initActions} from './actions'
+export {default as Tide} from './base'
+export {default as Component} from './component'
+export {default as wrap} from './wrap'
