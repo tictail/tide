@@ -71,14 +71,7 @@ export default class TideComponent extends React.Component {
 
   getPropsFromKeyPaths(keyPaths, tide) {
     const state = tide.getState()
-    return mapValues(keyPaths, (value) => {
-      const last = value[value.length - 1]
-      if (last === 'toJS()') {
-        const obj = state.getIn(value.slice(0, -1))
-        if (obj) return obj.toJS()
-      }
-      return state.getIn(value)
-    })
+    return mapValues(keyPaths, (value) => state.getIn(value))
   }
 
   getTide() {

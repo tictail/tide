@@ -1,4 +1,6 @@
-import defer from 'lodash.defer'
+function defer(fn) {
+  setTimeout(fn, 1)
+}
 
 function getNextState(oldState, newState) { return newState }
 

@@ -49,11 +49,8 @@
   "dependencies": {
     "immutable": "^3.8.1",
     "immutablediff": "^0.4.4",
-    "lodash.defer": "^4.1.0",
     "lodash.mapvalues": "^4.6.0",
-    "lodash.omit": "^4.5.0",
     "lodash.wrap": "^4.1.1",
-    "react-dom-server": "0.0.5",
     "react-pure-render": "^1.0.2"
   }
 }

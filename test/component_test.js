@@ -141,22 +141,6 @@ describe('Component', function() {
       TestUtils.renderIntoDocument(tree)
     })
 
-    it('converts to native JS object if \'toJS()\' is given in key path', function() {
-      const Child = createComponent(function() {
-        expect(this.props.nested).toEqual({foo: 'foo'})
-      })
-
-      const state = Immutable.fromJS({nested: {foo: 'foo'}})
-
-      tideInstance.setState(state)
-      const tree = React.createElement(Component, {
-        tide: tideInstance,
-        nested: 'nested.toJS()'
-      }, Child)
-
-      TestUtils.renderIntoDocument(tree)
-    })
-
     it('passes down keyPaths in the `tide` prop', function() {
       const Child = createComponent(function() {
         expect(this.props.tide.keyPaths.foo).toEqual(['nested', 'foo'])
