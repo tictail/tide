@@ -5,6 +5,7 @@
 * Breaking: Changed api for logging. Logging is now separated into different and need to be enabled one by one.
 * Breaking: Removed magic 'toJS()' handling in Component.
 * New feature: Added namespaces for actions.
+* New feature: `wrap` takes a third argument, a map of transform functions that props are passed through when they are updated. 
 * New feature: `Tide.addMiddleWare`, a hook to add middleware that intercepts state changes.
 * New feature: `Tide.addProp`, a hook to safely monkey patch props onto a tide instance.
 * New feature: `Tide.addComponentProp`, a hook to add properties to the props of `TideComponent`.

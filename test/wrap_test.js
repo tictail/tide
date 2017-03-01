@@ -13,7 +13,7 @@ describe('wrap', function() {
     tideInstance = new Tide()
   })
 
-  function createWrappedComponent(tideInstance, renderSpy, tideProps = {}) {
+  function createWrappedComponent(tideInstance, renderSpy, tideProps = {}, mappers) {
     class Child extends React.Component {
       render() {
         renderSpy && renderSpy.call(this)
@@ -21,7 +21,7 @@ describe('wrap', function() {
       }
     }
 
-    return wrap(Child, {tide: tideInstance, ...tideProps})
+    return wrap(Child, {tide: tideInstance, ...tideProps}, mappers)
   }
 
   it('wraps the given component class with a tide component', function() {
@@ -141,12 +141,56 @@ describe('wrap', function() {
         return React.createElement(Wrapped, this.state)
       }
     })
+    TestUtils.renderIntoDocument(React.createElement(Parent))
+    expect(spy).toHaveBeenCalledTimes(1)
+    parentSetState({childProp: 'foo'}, () => {
+      expect(spy).toHaveBeenCalledTimes(2)
+      done()
+    })
+  })
+
+  it('passes props through supplied mappers', function(done) {
+    tideInstance.setState(Immutable.Map({foo: 'bar', bar: 'baz', hi: 'mate'}))
+    const spy = jest.fn()
+
+    const Wrapped = createWrappedComponent(tideInstance, function() {
+      expect(this.props.hi).toBe(undefined)
+      return spy(this.props)
+    }, {foo: 'foo', bar: 'bar'}, {
+      foo: (val) => 'mapped_' + val,
+    })
+
+    let parentSetState = null
+    const Parent = React.createClass({
+      getInitialState() {
+        return {childProp: 'bar'}
+      },
+
+      componentDidMount() {
+        parentSetState = this.setState.bind(this)
+      },
+
+      render() {
+        return React.createElement(Wrapped, this.state)
+      }
+    })
 
     TestUtils.renderIntoDocument(React.createElement(Parent))
 
     expect(spy).toHaveBeenCalledTimes(1)
     parentSetState({childProp: 'foo'}, () => {
       expect(spy).toHaveBeenCalledTimes(2)
+      expect(spy).toHaveBeenCalledWith({
+        'bar': 'baz',
+        'childProp': 'bar',
+        'foo': 'mapped_bar',
+        'tide': {
+          'keyPaths': {
+            'bar': ['bar'],
+            'foo': ['foo']
+          }
+        }
+      })
       done()
     })
   })
