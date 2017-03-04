@@ -93,15 +93,12 @@ export default class TideComponent extends React.Component {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  const displayName = 'TideComponent'
-  const propTypes = {
+  TideComponent.displayName = 'TideComponent'
+  TideComponent.propTypes = {
     tide: React.PropTypes.object,
   }
-  TideComponent.displayName = displayName
-  TideComponent.propTypes = propTypes
 }
 
 const contextTypes = {tide: React.PropTypes.object}
-const childContextTypes = {tide: React.PropTypes.object}
 TideComponent.contextTypes = contextTypes
-TideComponent.childContextTypes = childContextTypes
+TideComponent.childContextTypes = contextTypes

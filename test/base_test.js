@@ -129,6 +129,25 @@ describe('Tide', () => {
       }, 0)
     })
   )
+
+  describe('#addProp', () => {
+    it('registers prop', () => {
+      tideInstance.addProp('foo', 'bar')
+      expect(tideInstance.foo).toBe('bar')
+    })
+
+    it('throws if same prop is registered twice', () => {
+      expect(() => {
+        tideInstance.addProp('foo', 'bar')
+        tideInstance.addProp('foo', 'baz')
+      }).toThrowError()
+      expect(() => {
+        tideInstance.addProp('baz', 'bar')
+        tideInstance.addProp('boo', 'baz')
+      }).not.toThrowError()
+    })
+  })
+
   describe('#middleware', () =>
     it('calls middleware on state change', () => {
       const insideMiddlewareSpy = jest.fn()
