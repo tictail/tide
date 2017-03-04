@@ -14,6 +14,7 @@ set -e
 if [ ${GIT_RET_CODE} -eq 0 ]; then
     echo "Publishing ${VERSION} to npm"
     echo -e "$NPM_USERNAME\n$NPM_PASSWORD\n$NPM_EMAIL" | npm login
+    cd lib
     npm run 2npm
     echo "Pushing git tag ${VERSION}"
     ${GIT_CMD} push --tags
