@@ -3,8 +3,8 @@ import {wrap, Component as TideComponent} from 'tide'
 
 import TodoItem from './todo-item'
 
-const TodoList = React.createClass({
-  renderTodos() {
+class TodoList extends React.Component {
+  renderTodos = () => {
     const {filter} = this.props
     return this.props.todos
       .filter((item) => filter === 'all' ||
@@ -19,20 +19,20 @@ const TodoList = React.createClass({
           key={item.get('id')}
           todo={this.props.tide.keyPaths.todos.concat(item.get('id'))}
         >
-          <TodoItem/>
+          {(props) => <TodoItem {...props} />}
         </TideComponent>
       ))
       .toArray()
-  },
+  };
 
   render() {
     return (
-      <ul className="todo-list">
+      <ul className='todo-list'>
         {this.renderTodos()}
       </ul>
     )
   }
-})
+}
 
 export default wrap(TodoList, {
   todos: 'todos',

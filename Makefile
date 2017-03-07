@@ -14,9 +14,10 @@ clean:
 
 build: clean
 	./node_modules/.bin/babel src -d lib
+	cp -rf package.json lib
 
 test:
-	./node_modules/.bin/jest
+	./node_modules/.bin/jest --coverage
 
 release: build
 	@./release.sh

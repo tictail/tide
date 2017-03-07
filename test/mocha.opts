@@ -1,3 +1,0 @@
---compilers js:babel-register,jsx:babel-register,coffee:coffee-script/register,cjsx:coffee-react/register
---ui bdd
---timeout 8000

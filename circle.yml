@@ -1,7 +1,9 @@
 machine:
   node:
     version: 6.1.0
-
+dependencies:
+  pre:
+    - npm set progress=false
 deployment:
   npm:
     branch: master

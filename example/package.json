@@ -10,7 +10,7 @@
     "react": "^15.3.1",
     "react-dom": "^15.3.1",
     "react-router": "^2.7.0",
-    "tide": "~1.1.0",
+    "tide": "~1.2.1",
     "todomvc-app-css": "^2.0.1"
   },
   "devDependencies": {

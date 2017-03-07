@@ -1,23 +1,32 @@
 import React from 'react'
 import shallowEqual from 'react-pure-render/shallowEqual'
-import assign from 'lodash.assign'
 
 import TideComponent from './component'
 
-module.exports = function(componentClass, initialTideProps = {}) {
-  const isImpure = initialTideProps.impure
-  const tideProps = assign({}, initialTideProps, {impure: true})
-
-  return React.createClass({
+export default function wrap(ComponentClass, {impure, ...tideProps} = {}, mappers) {
+  function mapProps(props) {
+    return Object.keys(mappers).reduce((obj, key) => {
+      const mapper = mappers[key]
+      if (process.env.NODE_ENV !== 'production') {
+        if (typeof mapper !== 'function') {
+          throw new Error('Mapper must be a function')
+        }
+      }
+      return mapper ? {...obj, [key]: mapper(props[key])} : obj
+    }, props)
+  }
+  return class Wrapped extends React.Component {
     shouldComponentUpdate(nextProps) {
-      if (isImpure) return true
+      if (impure) return true
       return !shallowEqual(this.props, nextProps)
-    },
+    }
 
     render() {
-      return React.createElement(TideComponent, tideProps,
-        React.createElement(componentClass, this.props)
+      return (
+        <TideComponent {...tideProps}>
+          {(props) => <ComponentClass {...(mappers ? mapProps(props) : props)} {...this.props} />}
+        </TideComponent>
       )
     }
-  })
+  }
 }

@@ -3,3 +3,4 @@
 lib/
 build/
 node_modules/
+coverage/

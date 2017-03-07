@@ -1,42 +1,35 @@
 import React from 'react'
 import shallowEqual from 'react-pure-render/shallowEqual'
-import assign from 'lodash.assign'
-import isArray from 'lodash.isarray'
-import isFunction from 'lodash.isfunction'
 import mapValues from 'lodash.mapvalues'
-import omit from 'lodash.omit'
-
-import TideBase from './base'
-
-const displayName = 'TideComponent'
-const contextTypes = {tide: React.PropTypes.object}
-const childContextTypes = {tide: React.PropTypes.object}
-const propTypes = {
-  impure: React.PropTypes.bool,
-  tide: React.PropTypes.object,
-}
+import Tide from './base'
 
 const NOT_KEY_PATH_PROPS = [
   'children',
   'tide',
-  'impure',
   'key',
   'ref',
 ]
+
+function omit(object, func) {
+  return Object.keys(object).reduce((obj, key) => {
+    const value = object[key]
+    return func(key, value) ? obj : {...obj, [key]: value}
+  }, {})
+}
 
 const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
   val[prop] = true
   return val
 }, {})
 
-class Component extends React.Component {
-  constructor(props, context) {
-    super(props, context)
+export default class TideComponent extends React.Component {
+  constructor(props) {
+    super(...arguments)
     const tide = this.getTide()
     const keyPaths = this.getKeyPaths(props, tide)
     this._componentTide = {
       keyPaths,
-      actions: tide.getActions(),
+      ...tide.getComponentProps(),
     }
 
     this.state = this.getPropsFromKeyPaths(keyPaths, tide)
@@ -66,10 +59,10 @@ class Component extends React.Component {
   }
 
   getKeyPaths(props, tide) {
-    let keyPaths = omit(props, (value, key) => { return excludedProps[key] })
+    let keyPaths = omit(props, (key) => excludedProps[key])
     keyPaths = mapValues(keyPaths, (val, key) => {
-      const value = isFunction(val) ? val(tide.getState()) : val
-      if (isArray(value)) return value
+      const value = typeof val === 'function' ? val(tide.getState()) : val
+      if (Array.isArray(value)) return value
       if (value === true) return [key]
       return value.split('.')
     })
@@ -78,46 +71,34 @@ class Component extends React.Component {
 
   getPropsFromKeyPaths(keyPaths, tide) {
     const state = tide.getState()
-    return mapValues(keyPaths, (value) => {
-      const last = value[value.length - 1]
-      if (last === 'toJS()') {
-        const obj = state.getIn(value.slice(0, -1))
-        if (obj) return obj.toJS()
-      }
-      return state.getIn(value)
-    })
+    return mapValues(keyPaths, (value) => state.getIn(value))
   }
 
   getTide() {
-    return this.props.tide instanceof TideBase ? this.props.tide : this.context.tide
+    return this.props.tide instanceof Tide ?
+      this.props.tide : this.context.tide
   }
 
   getChildProps() {
-    return assign(omit(this.state, (value) => value === undefined), {tide: this._componentTide})
+    return {...omit(this.state, (_, value) => value === undefined), tide: this._componentTide}
   }
 
   hasStaleState(newState) {
     return !shallowEqual(this.state, newState)
   }
 
-  wrapChild(child) {
-    return React.cloneElement(child, this.getChildProps())
-  }
-
   render() {
-    return React.Children.count(this.props.children) === 1 ?
-      this.wrapChild(this.props.children) :
-      React.createElement(
-        'span',
-        null,
-        React.Children.map(this.props.children, this.wrapChild.bind(this))
-      )
+    return this.props.children(this.getChildProps())
   }
 }
 
-Component.displayName = displayName
-Component.propTypes = propTypes
-Component.contextTypes = contextTypes
-Component.childContextTypes = childContextTypes
+if (process.env.NODE_ENV !== 'production') {
+  TideComponent.displayName = 'TideComponent'
+  TideComponent.propTypes = {
+    tide: React.PropTypes.object,
+  }
+}
 
-module.exports = Component
+const contextTypes = {tide: React.PropTypes.object}
+TideComponent.contextTypes = contextTypes
+TideComponent.childContextTypes = contextTypes

@@ -1,6 +1,4 @@
-import Actions from './actions'
-import Base from './base'
-import Component from './component'
-import wrap from './wrap'
-
-module.exports = {Actions, Base, Component, wrap}
+export {default as Actions, initActions} from './actions'
+export {default as Tide} from './base'
+export {default as Component} from './component'
+export {default as wrap} from './wrap'
