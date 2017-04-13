@@ -38,9 +38,9 @@
     "html-webpack-plugin": "^2.28.0",
     "jest": "~19.0.1",
     "publish": "^0.6.0",
-    "react": "^15.4.2",
-    "react-addons-test-utils": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^15.5.4",
+    "react-addons-test-utils": "~15.5.1",
+    "react-dom": "^15.5.4",
     "webpack": "^2.2.1"
   },
   "peerDependencies": {
@@ -51,6 +51,7 @@
     "immutablediff": "^0.4.4",
     "lodash.mapvalues": "^4.6.0",
     "lodash.wrap": "^4.1.1",
+    "prop-types": "~15.5.8",
     "react-pure-render": "^1.0.2"
   }
 }

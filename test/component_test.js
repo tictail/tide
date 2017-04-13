@@ -1,6 +1,7 @@
 /* eslint-disable react/no-multi-comp, react/display-name */
 import React from 'react'
 import TestUtils from 'react-addons-test-utils'
+import PropTypes from 'prop-types'
 import Immutable from 'immutable'
 
 import Tide from 'base'
@@ -26,7 +27,7 @@ describe('Component', function() {
     it('passes down the given tide instance in the context', function() {
       const Child = React.createClass({
         contextTypes: {
-          tide: React.PropTypes.object
+          tide: PropTypes.object
         },
 
         render() {
@@ -50,7 +51,7 @@ describe('Component', function() {
       function() {
         const Child = React.createClass({
           contextTypes: {
-            tide: React.PropTypes.object
+            tide: PropTypes.object
           },
 
           render() {

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import shallowEqual from 'react-pure-render/shallowEqual'
 import mapValues from 'lodash.mapvalues'
 import Tide from './base'
@@ -95,10 +96,10 @@ export default class TideComponent extends React.Component {
 if (process.env.NODE_ENV !== 'production') {
   TideComponent.displayName = 'TideComponent'
   TideComponent.propTypes = {
-    tide: React.PropTypes.object,
+    tide: PropTypes.object,
   }
 }
 
-const contextTypes = {tide: React.PropTypes.object}
+const contextTypes = {tide: PropTypes.object}
 TideComponent.contextTypes = contextTypes
 TideComponent.childContextTypes = contextTypes
