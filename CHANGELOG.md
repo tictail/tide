@@ -1,3 +1,7 @@
+### 2.0.0-alpha.3 2017-04-23
+* React 15.5 support
+* Nicer api for the logging plugin
+
 ### 2.0.0-alpha1 2017-03-07
 * Major internal re-write to improve modularity and enable extensions.
 * Breaking: `Base` is renamed to `Tide`
