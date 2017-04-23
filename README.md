@@ -39,7 +39,7 @@ To explain the benefits of keeping this value in our global state, let’s take 
 ```JavaScript
 import Immutable from 'immutable'
 import {Actions} from 'tide'
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 
 class TodoActions extends Actions {
   setTodoInputText(text) {

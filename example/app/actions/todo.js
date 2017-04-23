@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 import {Actions} from 'tide'
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 
 const STORAGE_KEY = 'todos-tide'
 // Actions are a set of methods that handle updates
