@@ -114,7 +114,7 @@ Head on over to [the wiki](https://github.com/tictail/tide/wiki) for the full do
 
 For bugs and feature requests, please open an issue. If you'd like to contribute, create a new PR
 with your changes. Make sure you include tests, bump the version in `package.json` according to
-[semantic versioning](http://semver.org/) and update the [CHANGELOG](changelog.md) (if applicable).
+[semantic versioning](http://semver.org/) and update the [CHANGELOG](CHANGELOG.md) (if applicable).
 
 ## License
 
