@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 
-export default class extends React.Component {
+class TodoItem extends React.Component {
   state = {
     editing: false,
     lastTitle: null,
@@ -86,3 +86,5 @@ export default class extends React.Component {
     )
   }
 }
+
+export default TodoItem
