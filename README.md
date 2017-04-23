@@ -76,16 +76,16 @@ The final code snippet to tie this example together is our input field component
 import React from 'react'
 import {wrap} from 'tide'
 
-const TodoInput = React.createClass({
-  onChange(e) {
+class TodoInput extends React.Component {
+  onChange = (e) => {
     this.props.tide.actions.todo.setTodoInputText(e.target.value)
-  },
+  }
 
-  onKeyPress(e) {
+  onKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.props.tide.actions.todo.addTodo()
     }
-  },
+  }
 
   render() {
     return (
