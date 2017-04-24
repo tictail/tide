@@ -39,7 +39,7 @@ To explain the benefits of keeping this value in our global state, let’s take 
 ```JavaScript
 import Immutable from 'immutable'
 import {Actions} from 'tide'
-import uuid from 'node-uuid'
+import uuid from 'uuid'
 
 class TodoActions extends Actions {
   setTodoInputText(text) {
@@ -76,16 +76,16 @@ The final code snippet to tie this example together is our input field component
 import React from 'react'
 import {wrap} from 'tide'
 
-const TodoInput = React.createClass({
-  onChange(e) {
+class TodoInput extends React.Component {
+  onChange = (e) => {
     this.props.tide.actions.todo.setTodoInputText(e.target.value)
-  },
+  }
 
-  onKeyPress(e) {
+  onKeyPress = (e) => {
     if (e.key === 'Enter') {
       this.props.tide.actions.todo.addTodo()
     }
-  },
+  }
 
   render() {
     return (
@@ -114,7 +114,7 @@ Head on over to [the wiki](https://github.com/tictail/tide/wiki) for the full do
 
 For bugs and feature requests, please open an issue. If you'd like to contribute, create a new PR
 with your changes. Make sure you include tests, bump the version in `package.json` according to
-[semantic versioning](http://semver.org/) and update the [CHANGELOG](changelog.md) (if applicable).
+[semantic versioning](http://semver.org/) and update the [CHANGELOG](CHANGELOG.md) (if applicable).
 
 ## License
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import TodoInput from './todo-input'
 
-export default class extends React.Component {
+class Header extends React.Component {
   render() {
     return (
       <header className='header'>
@@ -11,3 +11,5 @@ export default class extends React.Component {
     )
   }
 }
+
+export default Header
