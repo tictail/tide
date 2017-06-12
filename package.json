@@ -52,6 +52,6 @@
     "lodash.mapvalues": "^4.6.0",
     "lodash.wrap": "^4.1.1",
     "prop-types": "~15.5.8",
-    "react-pure-render": "^1.0.2"
+    "shallowequal": "^1.0.1"
   }
 }

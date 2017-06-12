@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import shallowEqual from 'react-pure-render/shallowEqual'
+import shallowEqual from 'shallowequal'
 import mapValues from 'lodash.mapvalues'
 import Tide from './base'
 
