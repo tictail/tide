@@ -1,3 +1,6 @@
+### 2.0.0 2017-06-20
+* Replace `react-pure-render/shallowEqual` with `shallowequal` 
+
 ### 2.0.0-alpha.3 2017-04-23
 * React 15.5 support
 * Nicer api for the logging plugin
