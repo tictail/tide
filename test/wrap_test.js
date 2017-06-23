@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react'
 import Immutable from 'immutable'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 
 import Tide from 'base'
 import wrap from 'wrap'
@@ -9,8 +9,10 @@ import wrap from 'wrap'
 let tideInstance
 
 describe('wrap', function() {
+  let parentSetState
   beforeEach(function() {
     tideInstance = new Tide()
+    parentSetState = null
   })
 
   function createWrappedComponent(tideInstance, renderSpy, tideProps = {}, mappers) {
@@ -22,6 +24,18 @@ describe('wrap', function() {
     }
 
     return wrap(Child, {tide: tideInstance, ...tideProps}, mappers)
+  }
+
+  function getParent(Wrapped) {
+    return class Parent extends React.Component {
+      state = {childProp: 'bar'}
+      componentDidMount() {
+        parentSetState = this.setState.bind(this)
+      }
+      render() {
+        return React.createElement(Wrapped, this.state)
+      }
+    }
   }
 
   it('wraps the given component class with a tide component', function() {
@@ -65,27 +79,13 @@ describe('wrap', function() {
     const Wrapped = createWrappedComponent(tideInstance, function() {
       return spy(this.props.childProp)
     })
-
-    let parentSetState = null
-    const Parent = React.createClass({
-      getInitialState() {
-        return {childProp: 'foo'}
-      },
-
-      componentDidMount() {
-        parentSetState = this.setState.bind(this)
-      },
-
-      render() {
-        return React.createElement(Wrapped, this.state)
-      }
-    })
+    const Parent = getParent(Wrapped)
 
     TestUtils.renderIntoDocument(React.createElement(Parent))
 
-    expect(spy).toHaveBeenCalledWith('foo')
-    parentSetState({childProp: 'bar'})
     expect(spy).toHaveBeenCalledWith('bar')
+    parentSetState({childProp: 'foo'})
+    expect(spy).toHaveBeenCalledWith('foo')
   })
 
   it('does not re-render the child when given the same props', function(done) {
@@ -94,26 +94,12 @@ describe('wrap', function() {
     const Wrapped = createWrappedComponent(tideInstance, function() {
       return spy(this.props.childProp)
     })
-
-    let parentSetState = null
-    const Parent = React.createClass({
-      getInitialState() {
-        return {childProp: 'foo'}
-      },
-
-      componentDidMount() {
-        parentSetState = this.setState.bind(this)
-      },
-
-      render() {
-        return React.createElement(Wrapped, this.state)
-      }
-    })
+    const Parent = getParent(Wrapped)
 
     TestUtils.renderIntoDocument(React.createElement(Parent))
 
     expect(spy).toHaveBeenCalledTimes(1)
-    parentSetState({childProp: 'foo'}, () => {
+    parentSetState({childProp: 'bar'}, () => {
       expect(spy).toHaveBeenCalledTimes(1)
       done()
     })
@@ -126,21 +112,8 @@ describe('wrap', function() {
       return spy(this.props.childProp)
     }
     , {impure: true})
+    const Parent = getParent(Wrapped)
 
-    let parentSetState = null
-    const Parent = React.createClass({
-      getInitialState() {
-        return {childProp: 'foo'}
-      },
-
-      componentDidMount() {
-        parentSetState = this.setState.bind(this)
-      },
-
-      render() {
-        return React.createElement(Wrapped, this.state)
-      }
-    })
     TestUtils.renderIntoDocument(React.createElement(Parent))
     expect(spy).toHaveBeenCalledTimes(1)
     parentSetState({childProp: 'foo'}, () => {
@@ -159,21 +132,7 @@ describe('wrap', function() {
     }, {foo: 'foo', bar: 'bar'}, {
       foo: (val) => 'mapped_' + val,
     })
-
-    let parentSetState = null
-    const Parent = React.createClass({
-      getInitialState() {
-        return {childProp: 'bar'}
-      },
-
-      componentDidMount() {
-        parentSetState = this.setState.bind(this)
-      },
-
-      render() {
-        return React.createElement(Wrapped, this.state)
-      }
-    })
+    const Parent = getParent(Wrapped)
 
     TestUtils.renderIntoDocument(React.createElement(Parent))
 
@@ -195,3 +154,4 @@ describe('wrap', function() {
     })
   })
 })
+

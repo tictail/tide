@@ -1,6 +1,6 @@
 import React from 'react'
 import {fromJS} from 'immutable'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 import Tide from 'base'
 import TideComponent from 'component'
 import Actions, {initActions} from 'actions'

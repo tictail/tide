@@ -39,7 +39,7 @@
     "jest": "~19.0.1",
     "publish": "^0.6.0",
     "react": "^15.5.4",
-    "react-addons-test-utils": "~15.5.1",
+    "react-dom/test-utils": "~15.5.1",
     "react-dom": "^15.5.4",
     "webpack": "^2.2.1"
   },
