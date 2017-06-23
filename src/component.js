@@ -24,10 +24,10 @@ const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
 }, {})
 
 export default class TideComponent extends React.Component {
-  constructor(props) {
-    super(...arguments)
+  constructor(...args) {
+    super(...args)
     const tide = this.getTide()
-    const keyPaths = this.getKeyPaths(props, tide)
+    const keyPaths = this.getKeyPaths(tide)
     this._componentTide = {
       keyPaths,
       ...tide.getComponentProps(),
@@ -53,14 +53,14 @@ export default class TideComponent extends React.Component {
   onStateChange() {
     if (this._isUnmounting) return
     const tide = this.getTide()
-    const newState = this.getPropsFromKeyPaths(this.getKeyPaths(this.props, tide), tide)
+    const newState = this.getPropsFromKeyPaths(this.getKeyPaths(tide), tide)
     if (this.hasStaleState(newState)) {
       this.setState(newState)
     }
   }
 
-  getKeyPaths(props, tide) {
-    let keyPaths = omit(props, (key) => excludedProps[key])
+  getKeyPaths(tide) {
+    let keyPaths = omit(this.props, (key) => excludedProps[key])
     keyPaths = mapValues(keyPaths, (val, key) => {
       const value = typeof val === 'function' ? val(tide.getState()) : val
       if (Array.isArray(value)) return value
