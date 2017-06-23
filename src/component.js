@@ -46,9 +46,7 @@ export default class TideComponent extends React.Component {
   handleTideStateChange = () => {
     if (this._isUnmounting) return
 
-    this.keyPaths = this.getKeyPaths()
     const newState = this.getMappedProps()
-
     if (shallowEqual(newState, this.state) === false) {
       this.setState(newState)
     }
