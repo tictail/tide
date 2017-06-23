@@ -9,6 +9,7 @@ const NOT_KEY_PATH_PROPS = [
   'tide',
   'key',
   'ref',
+  'propMap',
 ]
 
 function omit(object, func) {
@@ -53,10 +54,13 @@ export default class TideComponent extends React.Component {
   }
 
   getKeyPaths() {
-    let keyPaths = omit(this.props, (key) => excludedProps[key])
+    const {propMap, ...rest} = this.props
 
-    keyPaths = mapValues(keyPaths, (val, key) => {
-      const value = typeof val === 'function' ? val(this.tide.getState()) : val
+    const keyPaths = mapValues(propMap, (val, key) => {
+      const value = typeof val === 'function' ?
+        val(this.tide.getState(), rest) :
+        val
+
       if (Array.isArray(value)) return value
       if (value === true) return [key]
       return value.split('.')
@@ -75,8 +79,9 @@ export default class TideComponent extends React.Component {
       ...this.tide.getComponentProps(),
     }
     const mappedProps = omit(this.state, (_, value) => value === undefined)
+    const passThroughProps = omit(this.props, k => k === excludedProps[k])
 
-    return {...mappedProps, tide}
+    return {...mappedProps, ...passThroughProps, tide}
   }
 
   render() {
@@ -87,6 +92,7 @@ export default class TideComponent extends React.Component {
 if (process.env.NODE_ENV !== 'production') {
   TideComponent.displayName = 'TideComponent'
   TideComponent.propTypes = {
+    propMap: PropTypes.object,
     tide: PropTypes.object,
   }
 }

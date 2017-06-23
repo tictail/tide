@@ -70,22 +70,24 @@ describe('Component', function() {
   describe('Props', function() {
     it('passes down the data of the given key paths as props to the child', function() {
       const Child = createComponent(function() {
-        expect(this.props.foo).toEqual('foo')
-        expect(this.props.bar).toEqual('bar')
+        expect(this.props.foo).toEqual('my nested foo val')
+        expect(this.props.bar).toEqual('my nested bar val')
       })
 
       const state = Immutable.fromJS({
         nested: {
-          foo: 'foo',
-          bar: 'bar'
+          foo: 'my nested foo val',
+          bar: 'my nested bar val'
         }
       })
 
       tideInstance.setState(state)
       const tree = React.createElement(Component, {
         tide: tideInstance,
-        foo: ['nested', 'foo'],
-        bar: ['nested', 'bar']
+        propMap: {
+          foo: ['nested', 'foo'],
+          bar: ['nested', 'bar']
+        }
       }, Child)
 
       TestUtils.renderIntoDocument(tree)
@@ -93,15 +95,17 @@ describe('Component', function() {
 
     it('accepts dot notation instead of an array for key paths', function() {
       const Child = createComponent(function() {
-        expect(this.props.foo).toEqual('foo')
+        expect(this.props.foo).toEqual('my nested foo val')
       })
 
-      const state = Immutable.fromJS({nested: {foo: 'foo'}})
+      const state = Immutable.fromJS({nested: {foo: 'my nested foo val'}})
 
       tideInstance.setState(state)
       const tree = React.createElement(Component, {
         tide: tideInstance,
-        foo: 'nested.foo'
+        propMap: {
+          foo: 'nested.foo'
+        }
       }, Child)
 
       TestUtils.renderIntoDocument(tree)
@@ -109,31 +113,36 @@ describe('Component', function() {
 
     it('accepts setting key path to true to have it mirror the prop name', function() {
       const Child = createComponent(function() {
-        expect(this.props.foo).toEqual('foo')
+        expect(this.props.foo).toEqual('my foo val')
       })
 
-      const state = Immutable.fromJS({foo: 'foo'})
+      const state = Immutable.fromJS({foo: 'my foo val'})
 
       tideInstance.setState(state)
       const tree = React.createElement(Component, {
         tide: tideInstance,
-        foo: true
+        propMap: {
+          foo: true
+        }
       }, Child)
 
       TestUtils.renderIntoDocument(tree)
     })
 
-    it('accepts functions to create keypaths based on the current state', function() {
+    it('accepts functions to create keypaths based on the current state and props', function() {
       const Child = createComponent(function() {
-        expect(this.props.fooPointer).toEqual('foo')
+        expect(this.props.fooPointer).toEqual('foo val')
       })
 
-      const state = Immutable.fromJS({foo: 'foo', path: 'foo'})
+      const state = Immutable.fromJS({foo: 'foo', path: 'map', map: {a1: 'foo val'}})
 
       tideInstance.setState(state)
       const tree = React.createElement(Component, {
         tide: tideInstance,
-        fooPointer(state) { return [state.get('path')] }
+        id: 'a1',
+        propMap: {
+          fooPointer: (s, p) => [s.get('path'), p.id]
+        }
       }, Child)
 
       TestUtils.renderIntoDocument(tree)
@@ -146,7 +155,7 @@ describe('Component', function() {
 
       tideInstance.setState(Immutable.Map())
       const tree = React.createElement(
-        Component, {tide: tideInstance, foo: ['nested', 'foo']}, Child
+        Component, {tide: tideInstance, propMap: {foo: ['nested', 'foo']}}, Child
       )
       TestUtils.renderIntoDocument(tree)
     })
@@ -159,7 +168,7 @@ describe('Component', function() {
       tideInstance.setState(Immutable.Map())
       const tree = React.createElement(Component, {
         tide: tideInstance,
-        foo: ['non-existing-state-path']
+        propMap: {foo: ['non-existing-state-path']}
       }, Child)
       TestUtils.renderIntoDocument(tree)
     })
@@ -173,7 +182,11 @@ describe('Component', function() {
         const Child = createComponent(spy)
         tideInstance.setState(Immutable.Map({foo: 'foo'}))
 
-        const tree = React.createElement(Component, {tide: tideInstance, foo: ['foo']}, Child)
+        const tree = React.createElement(
+          Component,
+          {tide: tideInstance, propMap: {foo: ['foo']}},
+          Child
+        )
         TestUtils.renderIntoDocument(tree)
         expect(spy).toHaveBeenCalledTimes(1)
         tideInstance.updateState(state => state.set('foo', 'bar'))
@@ -199,7 +212,9 @@ describe('Component', function() {
 
       const tree = React.createElement(Component, {
         tide: tideInstance,
-        pointer(state) { return [state.get('path')] }
+        propMap: {
+          pointer: s => s.get('path')
+        }
       }, Child)
 
       TestUtils.renderIntoDocument(tree)
