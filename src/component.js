@@ -70,6 +70,8 @@ export default class TideComponent extends React.Component {
 
   getMappedProps() {
     const state = this.tide.getState()
+    if (!state) return {}
+
     return mapValues(this.getKeyPaths(), (value) => state.getIn(value))
   }
 
