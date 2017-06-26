@@ -12,10 +12,21 @@ const NOT_KEY_PATH_PROPS = [
 ]
 
 function omit(object, func) {
-  return Object.keys(object).reduce((obj, key) => {
-    const value = object[key]
-    return func(key, value) ? obj : {...obj, [key]: value}
-  }, {})
+  const result = {}
+  const keys = Object.keys(object)
+  const len = keys.length
+
+  for (let i = 0; i < len; i += 1) {
+    const key = keys[i]
+    const val = object[key]
+    const shouldOmit = func(key, val)
+
+    if (!shouldOmit) {
+      result[key] = val
+    }
+  }
+
+  return result
 }
 
 const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
@@ -24,45 +35,41 @@ const excludedProps = NOT_KEY_PATH_PROPS.reduce((val, prop) => {
 }, {})
 
 export default class TideComponent extends React.Component {
-  constructor(props) {
-    super(...arguments)
-    const tide = this.getTide()
-    const keyPaths = this.getKeyPaths(props, tide)
-    this._componentTide = {
-      keyPaths,
-      ...tide.getComponentProps(),
-    }
-
-    this.state = this.getPropsFromKeyPaths(keyPaths, tide)
+  constructor(...args) {
+    super(...args)
+    this.tide = this.props.tide instanceof Tide ? this.props.tide : this.context.tide
+    this.keyPaths = this.getKeyPaths()
+    this.state = this.getMappedProps()
   }
 
   getChildContext() {
-    return {tide: this.getTide()}
+    return {tide: this.tide}
   }
 
   componentWillMount() {
-    this._onStateChange = this.onStateChange.bind(this)
-    this.getTide().onChange(this._onStateChange)
+    this.tide.onChange(this.handleTideStateChange)
   }
 
   componentWillUnmount() {
     this._isUnmounting = true
-    this.getTide().offChange(this._onStateChange)
+    this.tide.offChange(this.handleTideStateChange)
   }
 
-  onStateChange() {
+  handleTideStateChange = () => {
     if (this._isUnmounting) return
-    const tide = this.getTide()
-    const newState = this.getPropsFromKeyPaths(this.getKeyPaths(this.props, tide), tide)
-    if (this.hasStaleState(newState)) {
+
+    this.keyPaths = this.getKeyPaths()
+    const newState = this.getMappedProps()
+    if (shallowEqual(newState, this.state) === false) {
       this.setState(newState)
     }
   }
 
-  getKeyPaths(props, tide) {
-    let keyPaths = omit(props, (key) => excludedProps[key])
+  getKeyPaths() {
+    let keyPaths = omit(this.props, (key) => excludedProps[key])
+
     keyPaths = mapValues(keyPaths, (val, key) => {
-      const value = typeof val === 'function' ? val(tide.getState()) : val
+      const value = typeof val === 'function' ? val(this.tide.getState()) : val
       if (Array.isArray(value)) return value
       if (value === true) return [key]
       return value.split('.')
@@ -70,22 +77,19 @@ export default class TideComponent extends React.Component {
     return keyPaths
   }
 
-  getPropsFromKeyPaths(keyPaths, tide) {
-    const state = tide.getState()
-    return mapValues(keyPaths, (value) => state.getIn(value))
-  }
-
-  getTide() {
-    return this.props.tide instanceof Tide ?
-      this.props.tide : this.context.tide
+  getMappedProps() {
+    const state = this.tide.getState()
+    return mapValues(this.keyPaths, (value) => state.getIn(value))
   }
 
   getChildProps() {
-    return {...omit(this.state, (_, value) => value === undefined), tide: this._componentTide}
-  }
+    const tide = {
+      keyPaths: this.keyPaths,
+      ...this.tide.getComponentProps(),
+    }
+    const mappedProps = omit(this.state, (_, value) => value === undefined)
 
-  hasStaleState(newState) {
-    return !shallowEqual(this.state, newState)
+    return {...mappedProps, tide}
   }
 
   render() {
