@@ -1,5 +1,5 @@
 function defer(fn) {
-  setTimeout(fn, 1)
+  setTimeout(fn, 0)
 }
 
 function getNextState(oldState, newState) { return newState }
