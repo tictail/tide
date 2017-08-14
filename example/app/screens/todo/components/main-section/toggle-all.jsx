@@ -14,6 +14,7 @@ class ToggleAll extends React.Component {
           checked={all}
           onChange={this.onChange}
           className="toggle-all"
+          id="toggle-all"
           type="checkbox"
         />
         <label htmlFor="toggle-all">
