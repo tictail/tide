@@ -142,6 +142,23 @@ describe('Component', function() {
       TestUtils.renderIntoDocument(tree)
     })
 
+    it('passes the tideMeta context to keypath functions ', function() {
+      const Child = createComponent(function() {
+        expect(this.props.metaData).toEqual('meta data')
+      })
+
+      const state = Immutable.fromJS({meta: 'meta data'})
+
+      tideInstance.setState(state)
+      const tree = React.createElement(Component, {
+        tide: tideInstance,
+        tideMeta: {pointer: 'meta'},
+        metaData(state, meta) { return [meta.pointer] }
+      }, Child)
+
+      TestUtils.renderIntoDocument(tree)
+    })
+
     it('passes down keyPaths in the `tide` prop', function() {
       const Child = createComponent(function() {
         expect(this.props.tide.keyPaths.foo).toEqual(['nested', 'foo'])
