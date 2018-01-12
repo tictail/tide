@@ -142,7 +142,7 @@ describe('Component', function() {
       TestUtils.renderIntoDocument(tree)
     })
 
-    it('passes the tidePointer context to keypath functions ', function() {
+    it('passes the tideOptions context to keypath functions', function() {
       const Child = createComponent(function() {
         expect(this.props.item).toEqual('Item A')
       })
@@ -152,7 +152,7 @@ describe('Component', function() {
       tideInstance.setState(state)
       const tree = React.createElement(Component, {
         tide: tideInstance,
-        tidePointer: {itemId: 'a'},
+        tideOptions: {itemId: 'a'},
         item: (state, pointer) => ['items', pointer.itemId]
       }, Child)
 

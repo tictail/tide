@@ -7,7 +7,7 @@ import Tide from './base'
 const NOT_KEY_PATH_PROPS = [
   'children',
   'tide',
-  'tidePointer',
+  'tideOptions',
   'key',
   'ref',
 ]
@@ -38,7 +38,7 @@ export default class TideComponent extends React.Component {
   }
 
   getChildContext() {
-    return {tide: this.getTide(), tidePointer: this.getTidePointer()}
+    return {tide: this.getTide(), tideOptions: this.getTideOptions()}
   }
 
   componentWillMount() {
@@ -63,7 +63,7 @@ export default class TideComponent extends React.Component {
   getKeyPaths(props, tide) {
     let keyPaths = omit(props, (key) => excludedProps[key])
     keyPaths = mapValues(keyPaths, (val, key) => {
-      const value = typeof val === 'function' ? val(tide.getState(), this.getTidePointer()) : val
+      const value = typeof val === 'function' ? val(tide.getState(), this.getTideOptions()) : val
       if (Array.isArray(value)) return value
       if (value === true) return [key]
       return value.split('.')
@@ -81,8 +81,8 @@ export default class TideComponent extends React.Component {
       this.props.tide : this.context.tide
   }
 
-  getTidePointer() {
-    return this.props.tidePointer || this.context.tidePointer || {}
+  getTideOptions() {
+    return this.props.tideOptions || this.context.tideOptions || {}
   }
 
   getChildProps() {
@@ -105,6 +105,6 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const contextTypes = {tide: PropTypes.object, tidePointer: PropTypes.object}
+const contextTypes = {tide: PropTypes.object, tideOptions: PropTypes.object}
 TideComponent.contextTypes = contextTypes
 TideComponent.childContextTypes = contextTypes
