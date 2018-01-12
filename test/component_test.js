@@ -136,7 +136,24 @@ describe('Component', function() {
       tideInstance.setState(state)
       const tree = React.createElement(Component, {
         tide: tideInstance,
-        fooPointer(state) { return [state.get('path')] }
+        fooPointer: (state) => [state.get('path')]
+      }, Child)
+
+      TestUtils.renderIntoDocument(tree)
+    })
+
+    it('passes the tideOptions context to keypath functions', function() {
+      const Child = createComponent(function() {
+        expect(this.props.item).toEqual('Item A')
+      })
+
+      const state = Immutable.fromJS({items: {a: 'Item A'}})
+
+      tideInstance.setState(state)
+      const tree = React.createElement(Component, {
+        tide: tideInstance,
+        tideOptions: {itemId: 'a'},
+        item: (state, pointer) => ['items', pointer.itemId]
       }, Child)
 
       TestUtils.renderIntoDocument(tree)

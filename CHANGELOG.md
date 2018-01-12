@@ -1,3 +1,6 @@
+### 2.1.0 2018-01-12
+* Add a new special property `tideOptions` on `TideComponent`. The `tideOptions` prop is an object that is supplied as the second argument to keypath functions. See https://github.com/tictail/tide/pull/29. 
+
 ### 2.0.0 2017-06-20
 * Replace `react-pure-render/shallowEqual` with `shallowequal` 
 
