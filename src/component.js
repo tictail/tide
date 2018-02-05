@@ -31,6 +31,7 @@ export default class TideComponent extends React.Component {
     const keyPaths = this.getKeyPaths(props, tide)
     this._componentTide = {
       keyPaths,
+      options: this.getTideOptions(),
       ...tide.getComponentProps(),
     }
 

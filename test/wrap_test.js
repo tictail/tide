@@ -188,7 +188,8 @@ describe('wrap', function() {
           'keyPaths': {
             'bar': ['bar'],
             'foo': ['foo']
-          }
+          },
+          'options': {}
         }
       })
       done()

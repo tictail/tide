@@ -159,6 +159,18 @@ describe('Component', function() {
       TestUtils.renderIntoDocument(tree)
     })
 
+    it('passes the tideOptions in the `tide` prop', function() {
+      const Child = createComponent(function() {
+        expect(this.props.tide.options.foo).toEqual('bar')
+      })
+
+      tideInstance.setState(Immutable.Map())
+      const tree = React.createElement(
+        Component, {tide: tideInstance, tideOptions: {foo: 'bar'}}, Child
+      )
+      TestUtils.renderIntoDocument(tree)
+    })
+
     it('passes down keyPaths in the `tide` prop', function() {
       const Child = createComponent(function() {
         expect(this.props.tide.keyPaths.foo).toEqual(['nested', 'foo'])
