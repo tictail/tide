@@ -1,0 +1,49 @@
+version: 2
+jobs:
+  install:
+    working_directory: ~/tide
+    docker:
+      - image: circleci/node:6
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "package.json" }}
+      - run: make install
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+  test:
+    working_directory: ~/tide
+    docker:
+      - image: circleci/node:6
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "package.json" }}
+      - run: make test
+  deploy:
+    working_directory: ~/tide
+    docker:
+      - image: circleci/node:6
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependency-cache-{{ checksum "package.json" }}
+      - run: make release
+workflows:
+  version: 2
+  test:
+    jobs:
+      - install
+      - test:
+          requires:
+            - install
+      - deploy:
+          requires:
+            - install
+            - test
+          filters:
+            branches:
+              only:
+                - master
