@@ -40,8 +40,8 @@ export default class Actions {
     this.setGlobalState(updater(this.getGlobalState()), options)
   }
 
-  mutateGlobal(keyPath, value) {
-    this.tide.mutate(keyPath, value)
+  mutateGlobal(keyPath, value, options) {
+    this.tide.mutate(keyPath, value, options)
   }
 
   getGlobal(keyPath) {

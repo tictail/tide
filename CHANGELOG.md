@@ -1,11 +1,14 @@
+### 2.3.0 2018-09-11
+* Accept an `options` param in `mutateGlobal`, as introduced for other functions in v1.1.0.
+
 ### 2.2.0 2018-02-05
-* Include `tideOptions` as `this.props.tide.options` in tide-wrapped components. 
+* Include `tideOptions` as `this.props.tide.options` in tide-wrapped components.
 
 ### 2.1.0 2018-01-12
-* Add a new special property `tideOptions` on `TideComponent`. The `tideOptions` prop is an object that is supplied as the second argument to keypath functions. See https://github.com/tictail/tide/pull/29. 
+* Add a new special property `tideOptions` on `TideComponent`. The `tideOptions` prop is an object that is supplied as the second argument to keypath functions. See https://github.com/tictail/tide/pull/29.
 
 ### 2.0.0 2017-06-20
-* Replace `react-pure-render/shallowEqual` with `shallowequal` 
+* Replace `react-pure-render/shallowEqual` with `shallowequal`
 
 ### 2.0.0-alpha.3 2017-04-23
 * React 15.5 support
