@@ -1,6 +1,6 @@
 /* eslint-disable react/no-multi-comp, react/display-name */
 import React from 'react'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 import PropTypes from 'prop-types'
 import Immutable from 'immutable'
 
@@ -14,27 +14,26 @@ describe('Component', function() {
     tideInstance = new Tide()
   })
 
-  const createComponent = (render) => (props) => {
-    return React.createElement(React.createClass({
+  const createComponent = (render) => (propsToInject) => {
+    class C extends React.Component {
       render() {
-        this.props = {...this.props, ...props}
+        this.props = {...this.props, ...propsToInject}
         render.apply(this)
         return null
       }
-    }))
+    }
+    return React.createElement(C)
   }
   describe('Context', function() {
     it('passes down the given tide instance in the context', function() {
-      const Child = React.createClass({
-        contextTypes: {
-          tide: PropTypes.object
-        },
+      class Child extends React.Component {
+        static contextTypes = {tide: PropTypes.object}
 
         render() {
           expect(this.context.tide).toBe(tideInstance)
           return null
         }
-      })
+      }
 
       const tree = React.createElement(Component, {tide: tideInstance},
         ({tide, ...props}) => React.createElement('div', props,
@@ -49,16 +48,14 @@ describe('Component', function() {
     it(
       'uses tide from context instead of props when directly nesting multiple components',
       function() {
-        const Child = React.createClass({
-          contextTypes: {
-            tide: PropTypes.object
-          },
+        class Child extends React.Component {
+          static contextTypes = {tide: PropTypes.object}
 
           render() {
             expect(this.context.tide).toBe(tideInstance)
             return null
           }
-        })
+        }
 
         const tree = React.createElement(Component, {tide: tideInstance},
           (props) => React.createElement(Component, {},
@@ -265,28 +262,24 @@ describe('Component', function() {
     it('does not re-render if something outside of the listened state updates', function(done) {
       const childRenderSpy = jest.fn()
 
-      const Child = React.createClass({
-        render() {
-          childRenderSpy()
-          return null
-        }
-      })
+      function Child () {
+        childRenderSpy()
+        return null
+      }
 
       let parentSetState = null
-      const Parent = React.createClass({
-        getInitialState() {
-          return {foo: 'foo'}
-        },
+      class Parent extends React.Component {
+        state = {foo: 'foo'}
 
         componentDidMount() {
           parentSetState = this.setState.bind(this)
-        },
+        }
 
         render() {
           const child = React.createElement(Child, this.state)
           return React.createElement(Component, {tide: tideInstance}, () => child)
         }
-      })
+      }
 
       TestUtils.renderIntoDocument(React.createElement(Parent))
 
@@ -303,19 +296,17 @@ describe('Component', function() {
       tideInstance.setState(Immutable.Map({foo: 'foo', bar: 'bar'}))
 
       let parentSetState = null
-      const Parent = React.createClass({
-        getInitialState() {
-          return {foo: 'foo'}
-        },
+      class Parent extends React.Component {
+        state = {foo: 'foo'}
 
         componentDidMount() {
           parentSetState = this.setState.bind(this)
-        },
+        }
 
         render() {
           return React.createElement(Component, {tide: tideInstance, impure: true}, Child)
         }
-      })
+      }
 
       expect(spy).toHaveBeenCalledTimes(0)
       TestUtils.renderIntoDocument(React.createElement(Parent))
